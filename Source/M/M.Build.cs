@@ -16,6 +16,7 @@ public class M : ModuleRules
         PrivateIncludePaths.Add("../Source/M/Character");
         PrivateIncludePaths.Add("../Source/M/GameMode");
         PrivateIncludePaths.Add("../Source/M/GameState");
+        PrivateIncludePaths.Add("../Source/M/MovementComponents");
         PrivateIncludePaths.Add("../Source/M/PlayerController");
         PrivateIncludePaths.Add("../Source/M/PlayerState");
         PrivateIncludePaths.Add("../Source/M/SaveGame");

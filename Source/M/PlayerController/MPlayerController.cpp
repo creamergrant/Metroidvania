@@ -18,6 +18,9 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_toggleOpenAction, ETriggerEvent::Started, this, &AMPlayerController::ToggleOpen);
 
 		EnhancedInputComponent->BindAction(m_saveAction, ETriggerEvent::Started, this, &AMPlayerController::Save);
+
+		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Triggered, this, &AMPlayerController::Move);
+		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Save);
 	}
 }
 
@@ -55,4 +58,12 @@ void AMPlayerController::Save()
 	UMSaveGameSubsystem* sg = GetGameInstance()->GetSubsystem<UMSaveGameSubsystem>();
 
 	sg->WriteSaveGame();
+}
+
+void AMPlayerController::Move(const FInputActionValue&)
+{
+}
+
+void AMPlayerController::Jump()
+{
 }

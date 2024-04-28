@@ -77,7 +77,7 @@ void UMSaveGameSubsystem::WriteSaveGame()
 	{
 		AActor* actor = *It;
 	
-		if (!actor || actor->Implements<UMSaveObjInterface>())
+		if (!actor || !actor->Implements<UMSaveObjInterface>())
 			continue;
 	
 		FActorSaveData actorData;

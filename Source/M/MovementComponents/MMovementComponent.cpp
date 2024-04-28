@@ -26,7 +26,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 		if (bFoundHit == false && World->GetTimerManager().IsTimerActive(m_coyoteTimeTimer) == false && m_bIsAirborne == false)
 		{
-			World->GetTimerManager().SetTimer(m_coyoteTimeTimer, this, UMMovementComponent::EndCoyoteTime, m_coyoteTimeAmount, false);
+			World->GetTimerManager().SetTimer(m_coyoteTimeTimer, this, &UMMovementComponent::EndCoyoteTime, m_coyoteTimeAmount, false);
 		}
 	}
 }

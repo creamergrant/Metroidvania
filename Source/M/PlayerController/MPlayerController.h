@@ -24,11 +24,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* m_saveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_interactAction;
+
 	virtual void SetupInputComponent() override;
 	virtual void AcknowledgePossession(APawn* PossesedPawn) override;
 	virtual void BeginPlay() override;
 
 	void ToggleOpen();
+	void Interact();
 
 	void Save();
 public:

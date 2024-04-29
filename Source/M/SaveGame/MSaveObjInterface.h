@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnActorLoaded();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnInteract();
 };

@@ -22,7 +22,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	class UStaticMeshComponent* m_mesh;
 
+	UPROPERTY(SaveGame)
+	FLinearColor m_color;
+
 	virtual void OnActorLoaded_Implementation() override;
+
+	virtual void OnInteract_Implementation() override;
 
 protected:
 	// Called when the game starts or when spawned

@@ -14,6 +14,23 @@ AMTestingObject::AMTestingObject()
 
 void AMTestingObject::OnActorLoaded_Implementation()
 {
+	UMaterialInstanceDynamic* MatInst = Cast<AActor>(this)->GetComponentByClass<UPrimitiveComponent>()->CreateAndSetMaterialInstanceDynamic(0);
+
+	if (MatInst)
+	{
+		MatInst->SetVectorParameterValue("Color", m_color);
+	}
+}
+
+void AMTestingObject::OnInteract_Implementation()
+{
+	UMaterialInstanceDynamic* MatInst = Cast<AActor>(this)->GetComponentByClass<UPrimitiveComponent>()->CreateAndSetMaterialInstanceDynamic(0);
+
+	if (MatInst)
+	{
+		m_color = FLinearColor::MakeRandomColor();
+		MatInst->SetVectorParameterValue("Color", m_color);
+	}
 }
 
 // Called when the game starts or when spawned

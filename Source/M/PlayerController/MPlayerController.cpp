@@ -19,8 +19,10 @@ void AMPlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(m_saveAction, ETriggerEvent::Started, this, &AMPlayerController::Save);
 
+		EnhancedInputComponent->BindAction(m_interactAction, ETriggerEvent::Started, this, &AMPlayerController::Interact);
+    
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Triggered, this, &AMPlayerController::Move);
-		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Save);
+		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
 	}
 }
 
@@ -50,6 +52,16 @@ void AMPlayerController::ToggleOpen()
 	if (actors[0])
 	{
 		Cast<AMTestingObject>(actors[0])->ToggleOpen();
+	}
+}
+
+void AMPlayerController::Interact()
+{
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMTestingObject::StaticClass(), actors);
+	if (actors[0])
+	{
+		IMSaveObjInterface::Execute_OnInteract(actors[0]);
 	}
 }
 

@@ -2,6 +2,7 @@
 
 
 #include "MTestingObject.h"
+#include "MMovementComponent.h"
 
 // Sets default values
 AMTestingObject::AMTestingObject()
@@ -10,6 +11,12 @@ AMTestingObject::AMTestingObject()
 	PrimaryActorTick.bCanEverTick = true;
 
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	m_mesh->SetSimulatePhysics(true);
+	m_mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	m_mesh->SetCollisionProfileName("BlockAllDynamic");
+	RootComponent = m_mesh;
+
+	m_moveComp = CreateDefaultSubobject<UMMovementComponent>("MoveComp");
 }
 
 void AMTestingObject::OnActorLoaded_Implementation()

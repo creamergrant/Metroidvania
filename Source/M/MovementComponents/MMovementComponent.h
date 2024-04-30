@@ -28,6 +28,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
+	float m_jumpHeight;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 	bool m_bIsAirborne;
 

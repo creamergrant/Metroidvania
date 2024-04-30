@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	class UStaticMeshComponent* m_mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	class UMMovementComponent* m_moveComp;
+
 	UPROPERTY(SaveGame)
 	FLinearColor m_color;
 

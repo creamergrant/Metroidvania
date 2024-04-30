@@ -8,6 +8,7 @@
 
 class UInputAction;
 class UInputMappingContext;
+struct FInputActionValue;
 
 UCLASS()
 class M_API AMPlayerController : public APlayerController
@@ -24,13 +25,27 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* m_saveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_interactAction;
+  
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_moveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_jumpAction;
+
+
 	virtual void SetupInputComponent() override;
 	virtual void AcknowledgePossession(APawn* PossesedPawn) override;
 	virtual void BeginPlay() override;
 
 	void ToggleOpen();
+	void Interact();
 
 	void Save();
+
+	void Move(const FInputActionValue&);
+	void Jump();
 public:
 
 };

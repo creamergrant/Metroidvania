@@ -20,8 +20,6 @@ public class M : ModuleRules
         PrivateIncludePaths.Add("../Source/M/PlayerController");
         PrivateIncludePaths.Add("../Source/M/PlayerState");
         PrivateIncludePaths.Add("../Source/M/SaveGame");
-        PrivateIncludePaths.Add("../Source/M/GameInstance");
-        PrivateIncludePaths.Add("../Source/M/GameInstance/SubSystem");
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

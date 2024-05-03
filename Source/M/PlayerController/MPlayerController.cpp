@@ -9,6 +9,7 @@
 #include "MTestingObject.h"
 #include "Kismet/GameplayStatics.h"
 #include "MMovementComponent.h"
+#include "MCharacter.h"
 
 void AMPlayerController::SetupInputComponent()
 {
@@ -30,6 +31,8 @@ void AMPlayerController::SetupInputComponent()
 void AMPlayerController::AcknowledgePossession(APawn* PossesedPawn)
 {
 	Super::AcknowledgePossession(PossesedPawn);
+
+	m_character = Cast<AMCharacter>(PossesedPawn);
 }
 
 void AMPlayerController::BeginPlay()
@@ -85,4 +88,5 @@ void AMPlayerController::Jump()
 	{
 		Cast<AMTestingObject>(actors[0])->m_moveComp->Jump();
 	}
+	m_character->m_moveComp->Jump();
 }

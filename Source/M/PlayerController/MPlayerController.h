@@ -47,5 +47,5 @@ protected:
 	void Move(const FInputActionValue&);
 	void Jump();
 public:
-
+	class AMCharacter* m_character;
 };

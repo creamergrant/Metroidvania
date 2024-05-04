@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	class UMMovementComponent* m_moveComp;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	class UMCombatComponent* m_combatComp;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

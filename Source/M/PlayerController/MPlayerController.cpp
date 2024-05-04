@@ -10,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MMovementComponent.h"
 #include "MCharacter.h"
+#include "MCombatComponent.h"
+#include "Components/BoxComponent.h"
 
 void AMPlayerController::SetupInputComponent()
 {
@@ -25,6 +27,8 @@ void AMPlayerController::SetupInputComponent()
     
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Triggered, this, &AMPlayerController::Move);
 		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
+
+		EnhancedInputComponent->BindAction(m_attackAction, ETriggerEvent::Started, this, &AMPlayerController::Attack);
 	}
 }
 
@@ -74,6 +78,11 @@ void AMPlayerController::Save()
 	UMSaveGameSubsystem* sg = GetGameInstance()->GetSubsystem<UMSaveGameSubsystem>();
 
 	sg->WriteSaveGame();
+}
+
+void AMPlayerController::Attack()
+{
+	m_character->m_combatComp->Attack();
 }
 
 void AMPlayerController::Move(const FInputActionValue&)

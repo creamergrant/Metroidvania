@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MMovementComponent.h"
+#include "MCombatComponent.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -45,6 +46,8 @@ AMCharacter::AMCharacter()
 	bUseControllerRotationRoll = false;
 
 	m_moveComp = CreateDefaultSubobject<UMMovementComponent>("MoveComp");
+
+	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
 }
 
 // Called when the game starts or when spawned

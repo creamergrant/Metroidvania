@@ -14,6 +14,7 @@ public class M : ModuleRules
 
         PrivateIncludePaths.Add("../Source/M/Actors");
         PrivateIncludePaths.Add("../Source/M/Character");
+        PrivateIncludePaths.Add("../Source/M/CombatComponents");
         PrivateIncludePaths.Add("../Source/M/GameMode");
         PrivateIncludePaths.Add("../Source/M/GameState");
         PrivateIncludePaths.Add("../Source/M/MovementComponents");

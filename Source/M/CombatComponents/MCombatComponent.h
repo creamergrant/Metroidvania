@@ -6,6 +6,8 @@
 #include "Components/SceneComponent.h"
 #include "MCombatComponent.generated.h"
 
+class UBoxComponent;
+
 UENUM()
 enum class ComboStep
 {
@@ -33,8 +35,12 @@ public:
 	// Sets default values for this component's properties
 	UMCombatComponent();
 
-	UPROPERTY(EditDefaultsOnly, Category = CombatBoxes)
-	class UBoxComponent* m_groundAtk1;
+	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)
+	UBoxComponent* m_groundAtk1;
+	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)
+	UBoxComponent* m_groundAtk2;
+	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)
+	UBoxComponent* m_groundAtk3;
 
 	bool m_attack = false;
 
@@ -49,6 +55,12 @@ protected:
 	void ResetAttack();
 
 	FTimerHandle m_resetAttack;
+
+	UBoxComponent* m_currentHitBox;
+
+	UBoxComponent* SelectHitBox();
+
+
 
 public:	
 	// Called every frame

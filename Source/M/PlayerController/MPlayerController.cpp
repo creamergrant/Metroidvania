@@ -82,11 +82,5 @@ void AMPlayerController::Move(const FInputActionValue&)
 
 void AMPlayerController::Jump()
 {
-	TArray<AActor*> actors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMTestingObject::StaticClass(), actors);
-	if (actors[0])
-	{
-		Cast<AMTestingObject>(actors[0])->m_moveComp->Jump();
-	}
 	m_character->m_moveComp->Jump();
 }

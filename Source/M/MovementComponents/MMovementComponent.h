@@ -7,6 +7,7 @@
 #include "MMovementComponent.generated.h"
 
 struct FInputActionValue;
+
 /**
  * 
  */
@@ -28,6 +29,8 @@ public:
 
 protected:
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
 	float m_jumpHeight;
 
@@ -41,8 +44,11 @@ protected:
 	float m_coyoteTimeAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump|Coyote Time")
-	float m_raycastOffsetDistance;
+	float m_sweepStartOffset;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump|Coyote Time")
-	float m_raycastLength;
+	float m_sweepDistance;
+
+	FCollisionShape m_sweepShape;
+	FCollisionQueryParams m_sweepQueryParams;
 };

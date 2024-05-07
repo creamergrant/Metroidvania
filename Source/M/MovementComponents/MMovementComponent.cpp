@@ -98,3 +98,4 @@ void UMMovementComponent::EndCoyoteTime()
 {
 	m_bIsAirborne = true;
 }
+

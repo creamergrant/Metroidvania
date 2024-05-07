@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* m_jumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_attackAction;
+
 
 	virtual void SetupInputComponent() override;
 	virtual void AcknowledgePossession(APawn* PossesedPawn) override;
@@ -43,6 +46,8 @@ protected:
 	void Interact();
 
 	void Save();
+
+	void Attack();
 
 	void Move(const FInputActionValue& Value);
 	void Jump();

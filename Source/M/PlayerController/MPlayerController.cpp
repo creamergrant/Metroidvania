@@ -24,6 +24,8 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_interactAction, ETriggerEvent::Started, this, &AMPlayerController::Interact);
     
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Triggered, this, &AMPlayerController::Move);
+		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Completed, this, &AMPlayerController::Move);
+
 		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
 	}
 }
@@ -76,8 +78,9 @@ void AMPlayerController::Save()
 	sg->WriteSaveGame();
 }
 
-void AMPlayerController::Move(const FInputActionValue&)
+void AMPlayerController::Move(const FInputActionValue& Value)
 {
+	m_character->m_moveComp->Move(Value);
 }
 
 void AMPlayerController::Jump()

@@ -18,7 +18,7 @@ UMCombatComponent::UMCombatComponent()
 	m_groundAtk1->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk1->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk1->SetCollisionProfileName("OverlapAll");
-	m_groundAtk1->SetupAttachment(this);
+	//m_groundAtk1->SetupAttachment(this);
 	
 	m_groundAtk2 = CreateDefaultSubobject<UBoxComponent>("GroundAttack2");
 	m_groundAtk2->SetRelativeLocation({ 100,0,30 });
@@ -26,7 +26,7 @@ UMCombatComponent::UMCombatComponent()
 	m_groundAtk2->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk2->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk2->SetCollisionProfileName("OverlapAll");
-	m_groundAtk2->SetupAttachment(this);
+	//m_groundAtk2->SetupAttachment(this);
 
 	m_groundAtk3 = CreateDefaultSubobject<UBoxComponent>("GroundAttack3");
 	m_groundAtk3->SetRelativeLocation({ 100,0,0 });
@@ -34,7 +34,7 @@ UMCombatComponent::UMCombatComponent()
 	m_groundAtk3->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk3->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk3->SetCollisionProfileName("OverlapAll");
-	m_groundAtk3->SetupAttachment(this);
+	//m_groundAtk3->SetupAttachment(this);
 
 }
 

@@ -44,7 +44,7 @@ public:
 
 	bool m_attack = false;
 
-	AttackType m_attackType;
+	AttackType m_attackType = AttackType::Ground;
 
 	ComboStep m_comboStep = ComboStep::NoAttack;
 

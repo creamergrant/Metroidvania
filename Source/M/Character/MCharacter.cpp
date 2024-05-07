@@ -19,6 +19,9 @@ AMCharacter::AMCharacter()
 	m_movement->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	m_movement->SetCollisionProfileName("BlockAllDynamic");
 	m_movement->SetBoxExtent(FVector(100, 10, 100));
+	m_movement->BodyInstance.bLockXRotation = true;
+	m_movement->BodyInstance.bLockYRotation = true;
+	m_movement->BodyInstance.bLockZRotation = true;
 	SetRootComponent(m_movement);
 
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>("mesh");

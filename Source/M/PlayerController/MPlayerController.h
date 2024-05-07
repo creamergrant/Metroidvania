@@ -49,7 +49,7 @@ protected:
 
 	void Attack();
 
-	void Move(const FInputActionValue&);
+	void Move(const FInputActionValue& Value);
 	void Jump();
 public:
 	class AMCharacter* m_character;

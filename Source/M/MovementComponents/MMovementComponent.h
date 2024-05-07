@@ -7,6 +7,7 @@
 #include "MMovementComponent.generated.h"
 
 struct FInputActionValue;
+
 /**
  * 
  */
@@ -21,18 +22,33 @@ public:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Move(const FInputActionValue&);
+	void Move(const FInputActionValue& Value);
 	void Jump();
 
+	void EnableSweepCheck();
 	void EndCoyoteTime();
 
 protected:
 
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float m_movementValue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+	float m_movementSpeed;
+
+	/****************
+	* JUMP VARIABLES
+	****************/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
 	float m_jumpHeight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 	bool m_bIsAirborne;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump|Coyote Time")
+	bool m_bDoSweep;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump|Coyote Time")
 	FTimerHandle m_coyoteTimeTimer;
@@ -41,8 +57,11 @@ protected:
 	float m_coyoteTimeAmount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump|Coyote Time")
-	float m_raycastOffsetDistance;
+	float m_sweepStartOffset;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump|Coyote Time")
-	float m_raycastLength;
+	float m_sweepDistance;
+
+	FCollisionShape m_sweepShape;
+	FCollisionQueryParams m_sweepQueryParams;
 };

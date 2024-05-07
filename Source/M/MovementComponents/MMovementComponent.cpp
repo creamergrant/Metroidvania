@@ -4,11 +4,16 @@
 #include "MMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/BoxComponent.h"
+#include "InputActionValue.h"
 
 UMMovementComponent::UMMovementComponent()
 {
+	m_movementValue = 0.0f;
+	m_movementSpeed = 500.0f;
+
 	m_jumpHeight = 100.0f;
 	m_bIsAirborne = false;
+	m_bDoSweep = true;
 	m_coyoteTimeAmount = 0.25f;
 	m_sweepStartOffset = 0.0f;
 	m_sweepDistance = 100.0f;
@@ -25,7 +30,7 @@ void UMMovementComponent::BeginPlay()
 	UBoxComponent* Box = Cast<UBoxComponent>(UpdatedPrimitive);
 	if (Box)
 	{
-		FVector HalfExtent = Box->GetScaledBoxExtent() * 0.5f;
+		FVector HalfExtent = Box->GetScaledBoxExtent() / 2.0f;
 		FVector3f RealHalfExtent = { (float)HalfExtent.X, (float)HalfExtent.Y, (float)HalfExtent.Z };
 		m_sweepShape.SetBox(RealHalfExtent);
 	}
@@ -38,14 +43,14 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	UWorld* World = GetWorld();
-	if (World)
+	if (World && m_bDoSweep)
 	{
 		FHitResult Hit;
 		FVector RayStart = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * m_sweepStartOffset);
 		FVector RayEnd = RayStart + (-UpdatedComponent->GetUpVector() * m_sweepDistance);
 
 		bool bFoundHit = World->SweepTestByChannel(RayStart, RayEnd, UpdatedPrimitive->GetComponentQuat(), ECollisionChannel::ECC_WorldStatic, m_sweepShape, m_sweepQueryParams);
-		DrawDebugLine(World, RayStart, RayEnd, FColor::Red, false, -1, 0, 5);
+
 
 		if (!bFoundHit && !World->GetTimerManager().IsTimerActive(m_coyoteTimeTimer) && !m_bIsAirborne)
 		{
@@ -57,11 +62,18 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			m_bIsAirborne = false;
 		}
 	}
+	
+	if (!FMath::IsNearlyZero(m_movementValue))
+	{
+		FVector Delta = { -m_movementValue * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f }; //Need that added z value or the character gets stuck on ledges from the sweep.
+		UpdatedPrimitive->SetWorldLocation(UpdatedPrimitive->GetComponentLocation() + Delta, true); //Need the sweep or character can sort of stick to walls
+	}
+	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue));
 }
 
-void UMMovementComponent::Move(const FInputActionValue&)
+void UMMovementComponent::Move(const FInputActionValue& Value)
 {
-
+	m_movementValue = Value.Get<float>();
 }
 
 void UMMovementComponent::Jump()
@@ -70,7 +82,16 @@ void UMMovementComponent::Jump()
 	{
 		UpdatedPrimitive->AddImpulse(FVector::UpVector * m_jumpHeight);
 		m_bIsAirborne = true;
+		m_bDoSweep = false;
+
+		FTimerHandle SweepEnable;
+		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.016f, false);
 	}
+}
+
+void UMMovementComponent::EnableSweepCheck()
+{
+	m_bDoSweep = true;
 }
 
 void UMMovementComponent::EndCoyoteTime()

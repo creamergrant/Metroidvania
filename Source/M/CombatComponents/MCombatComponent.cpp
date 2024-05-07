@@ -14,19 +14,17 @@ UMCombatComponent::UMCombatComponent()
 
 	m_groundAtk1 = CreateDefaultSubobject<UBoxComponent>("GroundAttack1");
 	m_groundAtk1->SetRelativeLocation({ 100,0,-30 });
-	m_groundAtk1->SetRelativeRotation({ 0,-10,0 });
+	m_groundAtk1->SetRelativeRotation({ -10,0,0 });
 	m_groundAtk1->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk1->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk1->SetCollisionProfileName("OverlapAll");
-	//m_groundAtk1->SetupAttachment(this);
 	
 	m_groundAtk2 = CreateDefaultSubobject<UBoxComponent>("GroundAttack2");
 	m_groundAtk2->SetRelativeLocation({ 100,0,30 });
-	m_groundAtk2->SetRelativeRotation({ 0,10,0 });
+	m_groundAtk2->SetRelativeRotation({ 10,0,0 });
 	m_groundAtk2->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk2->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk2->SetCollisionProfileName("OverlapAll");
-	//m_groundAtk2->SetupAttachment(this);
 
 	m_groundAtk3 = CreateDefaultSubobject<UBoxComponent>("GroundAttack3");
 	m_groundAtk3->SetRelativeLocation({ 100,0,0 });
@@ -34,8 +32,12 @@ UMCombatComponent::UMCombatComponent()
 	m_groundAtk3->SetBoxExtent({ 200, 10,30 });
 	m_groundAtk3->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk3->SetCollisionProfileName("OverlapAll");
-	//m_groundAtk3->SetupAttachment(this);
 
+}
+
+void UMCombatComponent::SetAttachmentComponent(USceneComponent* attachment)
+{
+	m_attachment = attachment;
 }
 
 
@@ -43,7 +45,13 @@ UMCombatComponent::UMCombatComponent()
 void UMCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	if (m_attachment)
+	{
+		m_groundAtk1->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
+		m_groundAtk2->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
+		m_groundAtk3->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
+	}
 }
 
 UBoxComponent* UMCombatComponent::SelectHitBox()

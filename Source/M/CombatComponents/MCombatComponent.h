@@ -35,6 +35,10 @@ public:
 	// Sets default values for this component's properties
 	UMCombatComponent();
 
+	void SetAttachmentComponent(USceneComponent* attachment);
+
+	USceneComponent* m_attachment;
+
 	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)
 	UBoxComponent* m_groundAtk1;
 	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)

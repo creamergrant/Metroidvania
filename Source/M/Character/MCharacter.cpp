@@ -51,6 +51,8 @@ AMCharacter::AMCharacter()
 	m_moveComp = CreateDefaultSubobject<UMMovementComponent>("MoveComp");
 
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
+	m_combatComp->SetupAttachment(RootComponent);
+	m_combatComp->SetAttachmentComponent(RootComponent);
 }
 
 // Called when the game starts or when spawned

@@ -89,6 +89,8 @@ void AMPlayerController::Attack()
 
 void AMPlayerController::Move(const FInputActionValue& Value)
 {
+	m_wasdLeftJoystickInput.X = Value.Get<float>();
+
 	m_character->m_moveComp->Move(Value);
 }
 

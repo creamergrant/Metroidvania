@@ -51,6 +51,11 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
+
+	FVector2D m_wasdLeftJoystickInput;
+
 public:
 	class AMCharacter* m_character;
+
+	FVector2D GetWASDLeftJoystickInput() const { return m_wasdLeftJoystickInput; }
 };

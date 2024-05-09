@@ -80,6 +80,8 @@ void UMMovementComponent::Jump()
 {
 	if (UpdatedPrimitive && !m_bIsAirborne)
 	{
+		StopMovementImmediately(); //Makes the jump feel a little more consistent. Zeros velocity so the jump impulse isnt fighting against downward velocity.
+
 		UpdatedPrimitive->AddImpulse(FVector::UpVector * m_jumpHeight);
 		m_bIsAirborne = true;
 		m_bDoSweep = false;

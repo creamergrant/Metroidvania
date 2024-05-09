@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "MSaveObjInterface.generated.h"
+#include "MInteractInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UMSaveObjInterface : public UInterface
+class UMInteractInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class UMSaveObjInterface : public UInterface
 /**
  * 
  */
-class M_API IMSaveObjInterface
+class M_API IMInteractInterface
 {
 	GENERATED_BODY()
 
@@ -24,5 +24,5 @@ class M_API IMSaveObjInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnActorLoaded();
+	void OnInteract();
 };

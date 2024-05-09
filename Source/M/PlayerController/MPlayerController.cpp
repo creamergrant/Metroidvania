@@ -71,7 +71,7 @@ void AMPlayerController::Interact()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMTestingObject::StaticClass(), actors);
 	if (actors[0])
 	{
-		IMSaveObjInterface::Execute_OnInteract(actors[0]);
+		IMInteractInterface::Execute_OnInteract(actors[0]);
 	}
 }
 

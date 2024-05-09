@@ -35,23 +35,21 @@ UMCombatComponent::UMCombatComponent()
 
 }
 
-void UMCombatComponent::SetAttachmentComponent(USceneComponent* attachment)
-{
-	m_attachment = attachment;
-}
-
-
 // Called when the game starts
 void UMCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (m_attachment)
-	{
-		m_groundAtk1->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
-		m_groundAtk2->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
-		m_groundAtk3->AttachToComponent(m_attachment, FAttachmentTransformRules::KeepRelativeTransform);
-	}
+	
+}
+
+void UMCombatComponent::OnRegister()
+{
+	Super::OnRegister();
+
+	m_groundAtk1->SetupAttachment(this);
+	m_groundAtk2->SetupAttachment(this);
+	m_groundAtk3->SetupAttachment(this);
 }
 
 UBoxComponent* UMCombatComponent::SelectHitBox()

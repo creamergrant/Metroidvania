@@ -17,6 +17,7 @@ public class M : ModuleRules
         PrivateIncludePaths.Add("../Source/M/CombatComponents");
         PrivateIncludePaths.Add("../Source/M/GameMode");
         PrivateIncludePaths.Add("../Source/M/GameState");
+        PrivateIncludePaths.Add("../Source/M/Interacts");
         PrivateIncludePaths.Add("../Source/M/Interfaces");
         PrivateIncludePaths.Add("../Source/M/MovementComponents");
         PrivateIncludePaths.Add("../Source/M/Pickups");

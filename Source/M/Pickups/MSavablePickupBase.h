@@ -17,10 +17,18 @@ class M_API AMSavablePickupBase : public AMPickupBase, public IMSaveObjInterface
 	
 public:
 
+	AMSavablePickupBase();
+
+	virtual void OnPickup();
+
 	virtual void OnActorLoaded_Implementation() override;
 
 protected:
+	virtual void BeginPlay() override;
 
 	UPROPERTY(SaveGame)
 	bool m_bHasBeenPickedUp;
+
+public:
+	virtual void Tick(float DeltaTime) override;
 };

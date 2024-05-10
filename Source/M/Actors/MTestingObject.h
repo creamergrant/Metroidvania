@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MSaveObjInterface.h"
-#include "../Interfaces/MInteractInterface.h" //??? complains without this
+#include "MInteractBase.h"
 #include "MTestingObject.generated.h"
 
 UCLASS()
-class M_API AMTestingObject : public AActor, public IMSaveObjInterface, public IMInteractInterface
+class M_API AMTestingObject : public AMInteractBase
 {
 	GENERATED_BODY()
 	

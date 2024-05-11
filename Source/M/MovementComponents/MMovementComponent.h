@@ -32,6 +32,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	/********************
+	* MOVEMENT VARIABLES
+	********************/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float m_movementValue;
 

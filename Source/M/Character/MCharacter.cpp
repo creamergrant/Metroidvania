@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "MMovementComponent.h"
 #include "MCombatComponent.h"
+#include "MEquipable.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -66,6 +67,44 @@ void AMCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
+}
+
+void AMCharacter::IncreaseStats()
+{
+	for (int i = 0; i < m_equips.Num(); i++)
+	{
+		for (int j = 0; j < m_equips[i]->m_stats.Num(); j++)
+		{
+			float inc = m_equips[i]->m_stats[j]->m_increaseAmt;
+			switch (m_equips[i]->m_stats[j]->m_type)
+			{
+			case StatType::NoIncrease:
+				
+				break;
+			case StatType::Movement:
+				m_movementStat += inc;
+				break;
+			case StatType::Damage:
+				m_dmgStat += inc;
+				break;
+			case StatType::Health:
+				m_healthStat += inc;
+				break;
+			case StatType::Weight:
+				m_weightStat += inc;
+				break;
+			case StatType::Strength:
+				m_strengthStat += inc;
+				break;
+			case StatType::AttackSpeed:
+				m_atkSpeedStat += inc;
+				break;
+			default:
+
+				break;
+			}
+		}
+	}
 }
 
 

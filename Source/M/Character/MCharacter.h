@@ -41,5 +41,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	float m_movementStat;
+	float m_dmgStat;
+	float m_healthStat;
+	float m_weightStat;
+	float m_strengthStat;
+	float m_atkSpeedStat;
 
+	UPROPERTY(SaveGame)
+	TArray<class UMEquipable*> m_equips;
+
+	void IncreaseStats();
 };

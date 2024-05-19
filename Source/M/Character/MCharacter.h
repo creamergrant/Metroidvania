@@ -36,6 +36,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UMCombatComponent* m_combatComp;
 
+	class UMSpellComponent* m_spell;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

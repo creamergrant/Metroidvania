@@ -13,6 +13,7 @@
 #include "MCharacter.h"
 #include "MCombatComponent.h"
 #include "Components/BoxComponent.h"
+#include "MSpellComponent.h"
 
 void AMPlayerController::SetupInputComponent()
 {
@@ -34,6 +35,8 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_dashAction, ETriggerEvent::Triggered, this, &AMPlayerController::Dash);
 
 		EnhancedInputComponent->BindAction(m_attackAction, ETriggerEvent::Started, this, &AMPlayerController::Attack);
+
+		EnhancedInputComponent->BindAction(m_spellAction, ETriggerEvent::Started, this, &AMPlayerController::Spell);
 	}
 }
 
@@ -97,8 +100,14 @@ void AMPlayerController::Move(const FInputActionValue& Value)
 	if (!FMath::IsNearlyZero(m_currentDirectionalInput.X))
 		m_lastDirectionalInput.X = m_currentDirectionalInput.X;
 
-	if (!m_bAreMovementControlsLocked)
+	if (FMath::IsNearlyZero(Value.Get<float>()))
+	{
 		m_character->m_moveComp->Move(Value);
+	}
+	else if(!m_bAreMovementControlsLocked)
+	{
+		m_character->m_moveComp->Move(Value);
+	}
 }
 
 void AMPlayerController::Jump()
@@ -111,6 +120,14 @@ void AMPlayerController::Dash()
 {
 	if (!m_bAreMovementControlsLocked)
 		m_character->m_dashComp->Dash();
+}
+
+void AMPlayerController::Spell()
+{
+	if (m_character->m_spell)
+	{
+		m_character->m_spell->FireSpell();
+	}
 }
 
 void AMPlayerController::SetMovementControlLockState(bool State)

@@ -4,6 +4,7 @@
 #include "MPickupBase.h"
 #include "Components/BoxComponent.h"
 #include "PaperSpriteComponent.h"
+#include "MHorizontalSpell.h"
 #include "MCharacter.h"
 
 // Sets default values
@@ -57,5 +58,6 @@ void AMPickupBase::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompon
 	if (Character)
 	{
 		OnPickup();
+		Character->m_spell = NewObject<UMHorizontalSpell>(Character);
 	}
 }

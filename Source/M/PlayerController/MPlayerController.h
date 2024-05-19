@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* m_attackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_spellAction;
+
 
 	virtual void SetupInputComponent() override;
 	virtual void AcknowledgePossession(APawn* PossesedPawn) override;
@@ -55,6 +58,7 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Jump();
 	void Dash();
+	void Spell();
 
 	FVector2D m_currentDirectionalInput;
 	FVector2D m_lastDirectionalInput;

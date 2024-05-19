@@ -27,8 +27,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* m_camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 	class UMMovementComponent* m_moveComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
+	class UMDashComponent* m_dashComp;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UMCombatComponent* m_combatComp;
@@ -52,4 +55,6 @@ public:
 	TArray<class UMEquipable*> m_equips;
 
 	void IncreaseStats();
+
+	void StopAllMovement();
 };

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MMovementComponent.h"
+#include "MDashComponent.h"
 #include "MCombatComponent.h"
 #include "MEquipable.h"
 
@@ -23,6 +24,7 @@ AMCharacter::AMCharacter()
 	m_movement->BodyInstance.bLockXRotation = true;
 	m_movement->BodyInstance.bLockYRotation = true;
 	m_movement->BodyInstance.bLockZRotation = true;
+	m_movement->BodyInstance.bLockYTranslation = true;
 	SetRootComponent(m_movement);
 
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>("mesh");
@@ -50,6 +52,8 @@ AMCharacter::AMCharacter()
 	bUseControllerRotationRoll = false;
 
 	m_moveComp = CreateDefaultSubobject<UMMovementComponent>("MoveComp");
+
+	m_dashComp = CreateDefaultSubobject<UMDashComponent>("DashComp");
 
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
 	m_combatComp->SetupAttachment(RootComponent);
@@ -105,6 +109,12 @@ void AMCharacter::IncreaseStats()
 			}
 		}
 	}
+}
+
+void AMCharacter::StopAllMovement()
+{
+	m_dashComp->StopMovementImmediately();
+	m_moveComp->StopMovementImmediately();
 }
 
 

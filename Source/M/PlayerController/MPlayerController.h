@@ -35,6 +35,9 @@ protected:
 	UInputAction* m_jumpAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* m_dashAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* m_attackAction;
 
 
@@ -51,11 +54,19 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
+	void Dash();
 
-	FVector2D m_wasdLeftJoystickInput;
+	FVector2D m_currentDirectionalInput;
+	FVector2D m_lastDirectionalInput;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input)
+	bool m_bAreMovementControlsLocked = false; //pardon the Jimmy-ism
 
 public:
 	class AMCharacter* m_character;
 
-	FVector2D GetWASDLeftJoystickInput() const { return m_wasdLeftJoystickInput; }
+	FVector2D GetCurrentDirectionalInput() const { return m_currentDirectionalInput; }
+	FVector2D GetLastDirectionalInput() const { return m_lastDirectionalInput; }
+
+	void SetMovementControlLockState(bool State);
 };

@@ -9,6 +9,7 @@
 #include "MTestingObject.h"
 #include "Kismet/GameplayStatics.h"
 #include "MMovementComponent.h"
+#include "MDashComponent.h"
 #include "MCharacter.h"
 #include "MCombatComponent.h"
 #include "Components/BoxComponent.h"
@@ -29,6 +30,8 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Completed, this, &AMPlayerController::Move);
 
 		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
+
+		EnhancedInputComponent->BindAction(m_dashAction, ETriggerEvent::Triggered, this, &AMPlayerController::Dash);
 
 		EnhancedInputComponent->BindAction(m_attackAction, ETriggerEvent::Started, this, &AMPlayerController::Attack);
 	}
@@ -89,12 +92,28 @@ void AMPlayerController::Attack()
 
 void AMPlayerController::Move(const FInputActionValue& Value)
 {
-	m_wasdLeftJoystickInput.X = Value.Get<float>();
+	m_currentDirectionalInput.X = Value.Get<float>();
 
-	m_character->m_moveComp->Move(Value);
+	if (!FMath::IsNearlyZero(m_currentDirectionalInput.X))
+		m_lastDirectionalInput.X = m_currentDirectionalInput.X;
+
+	if (!m_bAreMovementControlsLocked)
+		m_character->m_moveComp->Move(Value);
 }
 
 void AMPlayerController::Jump()
 {
-	m_character->m_moveComp->Jump();
+	if(!m_bAreMovementControlsLocked)
+		m_character->m_moveComp->Jump();
+}
+
+void AMPlayerController::Dash()
+{
+	if (!m_bAreMovementControlsLocked)
+		m_character->m_dashComp->Dash();
+}
+
+void AMPlayerController::SetMovementControlLockState(bool State)
+{
+	m_bAreMovementControlsLocked = State;
 }

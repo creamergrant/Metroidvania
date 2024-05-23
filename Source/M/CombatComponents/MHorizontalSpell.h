@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MSpellComponent.h"
+#include "MProjectile.h"
 #include "MHorizontalSpell.generated.h"
 
 /**
@@ -17,6 +18,9 @@ class M_API UMHorizontalSpell : public UMSpellComponent
 public:
 	UMHorizontalSpell();
 
+	TSubclassOf<AMProjectile> m_projectile;
+
+	class UStaticMesh* m_mesh;
 protected:
 	virtual void BeginPlay() override;
 

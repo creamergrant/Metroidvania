@@ -34,6 +34,7 @@ void UMSpellComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UMSpellComponent::OnRegister()
 {
+	Super::OnRegister();
 }
 
 void UMSpellComponent::FireSpell()

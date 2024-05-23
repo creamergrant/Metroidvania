@@ -24,6 +24,7 @@ public class M : ModuleRules
         PrivateIncludePaths.Add("../Source/M/Pickups");
         PrivateIncludePaths.Add("../Source/M/PlayerController");
         PrivateIncludePaths.Add("../Source/M/PlayerState");
+        PrivateIncludePaths.Add("../Source/M/Projectiles");
         PrivateIncludePaths.Add("../Source/M/SaveGame");
 
         // Uncomment if you are using Slate UI

@@ -57,7 +57,9 @@ void AMPickupBase::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompon
 	AMCharacter* Character = Cast<AMCharacter>(OtherActor);
 	if (Character)
 	{
+		Character->m_spell = NewObject<UMHorizontalSpell>();
+		Character->m_spell->Rename(new TCHAR('a'), Character);
+		Character->m_spell->RegisterComponent();
 		OnPickup();
-		Character->m_spell = NewObject<UMHorizontalSpell>(Character);
 	}
 }

@@ -45,7 +45,22 @@ protected:
 	* JUMP VARIABLES
 	****************/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
-	float m_jumpHeight;
+	class UCurveFloat* m_jumpCurve;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
+	float m_maxJumpHeight;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
+	float m_startJumpHeight;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
+	float m_jumpTimeMax;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
+	float m_jumpTimeCurrent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
+	bool m_bIsJumping;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 	bool m_bIsAirborne;

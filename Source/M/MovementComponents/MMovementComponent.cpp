@@ -4,6 +4,9 @@
 #include "MMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/BoxComponent.h"
+#include "Components/TimelineComponent.h"
+#include "Curves/CurveFloat.h"
+#include "UObject/ConstructorHelpers.h"
 #include "InputActionValue.h"
 
 UMMovementComponent::UMMovementComponent()
@@ -11,7 +14,11 @@ UMMovementComponent::UMMovementComponent()
 	m_movementValue = 0.0f;
 	m_movementSpeed = 500.0f;
 
-	m_jumpHeight = 100.0f;
+	m_maxJumpHeight = 100.0f;
+	m_startJumpHeight = 0.0f;
+	m_jumpTimeMax = 0.0f;
+	m_jumpTimeCurrent = 0.0f;
+	m_bIsJumping = false;
 	m_bIsAirborne = false;
 	m_bDoSweep = true;
 	m_coyoteTimeAmount = 0.25f;
@@ -21,6 +28,12 @@ UMMovementComponent::UMMovementComponent()
 	//locks movement to X/Y plane
 	bConstrainToPlane = true;
 	PlaneConstraintNormal = GetPlaneConstraintNormalFromAxisSetting(EPlaneConstraintAxisSetting::Y);
+
+	static ConstructorHelpers::FObjectFinder<UCurveFloat> Curve(TEXT("/Game/Blueprint/TestCurve"));
+	if (Curve.Object != NULL)
+	{
+		m_jumpCurve = Curve.Object;
+	}
 }
 
 void UMMovementComponent::BeginPlay()
@@ -28,14 +41,21 @@ void UMMovementComponent::BeginPlay()
 	Super::BeginPlay();
 
 	UBoxComponent* Box = Cast<UBoxComponent>(UpdatedPrimitive);
+	//check(Box != nullptr); //pseudo if statement that lets me know that i can use updated primitive freely without needing to if check it all the time.
 	if (Box)
 	{
 		FVector HalfExtent = Box->GetScaledBoxExtent() / 2.0f;
 		FVector3f RealHalfExtent = { (float)HalfExtent.X, (float)HalfExtent.Y, (float)HalfExtent.Z };
 		m_sweepShape.SetBox(RealHalfExtent);
 	}
-
+	
 	m_sweepQueryParams.AddIgnoredComponent(UpdatedPrimitive);
+
+	if (m_jumpCurve)
+	{
+		float temp;
+		m_jumpCurve->GetTimeRange(temp, m_jumpTimeMax);
+	}
 }
 
 void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -69,6 +89,21 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		UpdatedPrimitive->SetWorldLocation(UpdatedPrimitive->GetComponentLocation() + Delta, true); //Need the sweep or character can sort of stick to walls
 	}
 	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue));
+
+	if (m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax)
+	{
+		float JumpHeightMultiplier = m_jumpCurve->GetFloatValue(m_jumpTimeCurrent); //get multiplier at current time
+		FVector CompPos = UpdatedPrimitive->GetComponentLocation();
+
+		FVector Delta = { CompPos.X, CompPos.Y, m_startJumpHeight + m_maxJumpHeight * JumpHeightMultiplier };
+		UpdatedPrimitive->SetWorldLocation(Delta, true);
+
+		m_jumpTimeCurrent += DeltaTime;
+	}
+	else if (m_bIsJumping)
+	{
+		m_bIsJumping = false;
+	}
 }
 
 void UMMovementComponent::Move(const FInputActionValue& Value)
@@ -78,13 +113,14 @@ void UMMovementComponent::Move(const FInputActionValue& Value)
 
 void UMMovementComponent::Jump()
 {
-	if (UpdatedPrimitive && !m_bIsAirborne)
+	if (!m_bIsAirborne && !m_bIsJumping)
 	{
-		StopMovementImmediately(); //Makes the jump feel a little more consistent. Zeros velocity so the jump impulse isnt fighting against downward velocity.
-
-		UpdatedPrimitive->AddImpulse(FVector::UpVector * m_jumpHeight);
 		m_bIsAirborne = true;
+		m_bIsJumping = true;
 		m_bDoSweep = false;
+		m_jumpTimeCurrent = 0.0f;
+
+		m_startJumpHeight = UpdatedPrimitive->GetComponentLocation().Z;
 
 		FTimerHandle SweepEnable;
 		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.016f, false);

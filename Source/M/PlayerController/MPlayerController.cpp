@@ -97,10 +97,10 @@ void AMPlayerController::Move(const FInputActionValue& Value)
 {
 	m_currentDirectionalInput.X = Value.Get<float>();
 
-	if (!FMath::IsNearlyZero(m_currentDirectionalInput.X))
+	if (!FMath::IsNearlyZero(m_currentDirectionalInput.X) && !m_bAreMovementControlsLocked)
 		m_lastDirectionalInput.X = m_currentDirectionalInput.X;
 
-	if (FMath::IsNearlyZero(Value.Get<float>()))
+	if (FMath::IsNearlyZero(m_currentDirectionalInput.X))
 	{
 		m_character->m_moveComp->Move(Value);
 	}
@@ -118,8 +118,7 @@ void AMPlayerController::Jump()
 
 void AMPlayerController::Dash()
 {
-	if (!m_bAreMovementControlsLocked)
-		m_character->m_dashComp->Dash();
+	m_character->m_dashComp->Dash();
 }
 
 void AMPlayerController::Spell()

@@ -5,6 +5,8 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "MSaveObjInterface.h"
+#include "MTestingObject.h"
 
 AMHorizontalSpellProjectile::AMHorizontalSpellProjectile()
 {
@@ -28,6 +30,10 @@ AMHorizontalSpellProjectile::AMHorizontalSpellProjectile()
 	m_moveComp->ProjectileGravityScale = 0;
 
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+
+	const ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Game/Mesh/the_guy2"));
+
+	m_mesh->SetStaticMesh(MeshObj.Object);
 	
 	m_mesh->SetupAttachment(RootComponent);
 }
@@ -44,4 +50,8 @@ void AMHorizontalSpellProjectile::Tick(float DeltaTime)
 
 void AMHorizontalSpellProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (Cast<AMTestingObject>(Other))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "git gud");
+	}
 }

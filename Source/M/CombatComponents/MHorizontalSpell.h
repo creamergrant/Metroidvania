@@ -20,7 +20,6 @@ public:
 
 	TSubclassOf<AMProjectile> m_projectile;
 
-	class UStaticMesh* m_mesh;
 protected:
 	virtual void BeginPlay() override;
 

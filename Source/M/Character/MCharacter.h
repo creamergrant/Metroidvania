@@ -36,6 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UMCombatComponent* m_combatComp;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
 	class UMSpellComponent* m_spell;
 
 protected:

@@ -28,6 +28,11 @@ public:
 	void EnableSweepCheck();
 	void EndCoyoteTime();
 
+	void CheckAbove();
+	void CheckBellow();
+
+	void DropDown();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -36,7 +41,7 @@ protected:
 	* MOVEMENT VARIABLES
 	********************/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float m_movementValue;
+	FVector2D m_movementValue;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	float m_movementSpeed;

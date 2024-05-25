@@ -8,10 +8,11 @@
 #include "Curves/CurveFloat.h"
 #include "UObject/ConstructorHelpers.h"
 #include "InputActionValue.h"
+#include "MOneWayPlatform.h"
 
 UMMovementComponent::UMMovementComponent()
 {
-	m_movementValue = 0.0f;
+	m_movementValue = { 0.0f, 0.0f };
 	m_movementSpeed = 500.0f;
 
 	m_maxJumpHeight = 100.0f;
@@ -82,13 +83,23 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			m_bIsAirborne = false;
 		}
 	}
-	
-	if (!FMath::IsNearlyZero(m_movementValue))
+
+	if (m_bIsAirborne)
 	{
-		FVector Delta = { -m_movementValue * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f }; //Need that added z value or the character gets stuck on ledges from the sweep.
+		CheckAbove();
+	}
+	if (!m_bIsJumping && m_bIsAirborne)
+	{
+		CheckBellow();
+	}
+	
+	
+	if (!FMath::IsNearlyZero(m_movementValue.X))
+	{
+		FVector Delta = { -m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f }; //Need that added z value or the character gets stuck on ledges from the sweep.
 		UpdatedPrimitive->SetWorldLocation(UpdatedPrimitive->GetComponentLocation() + Delta, true); //Need the sweep or character can sort of stick to walls
 	}
-	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue));
+	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue.Y));
 
 	if (m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax)
 	{
@@ -108,11 +119,16 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UMMovementComponent::Move(const FInputActionValue& Value)
 {
-	m_movementValue = Value.Get<float>();
+	m_movementValue = Value.Get<FVector2D>();
 }
 
 void UMMovementComponent::Jump()
 {
+	if (m_movementValue.Y == -1)
+	{
+		DropDown();
+		return;
+	}
 	if (!m_bIsAirborne && !m_bIsJumping)
 	{
 		m_bIsAirborne = true;
@@ -135,5 +151,59 @@ void UMMovementComponent::EnableSweepCheck()
 void UMMovementComponent::EndCoyoteTime()
 {
 	m_bIsAirborne = true;
+}
+
+void UMMovementComponent::CheckAbove()
+{
+	UWorld* world = GetWorld();
+	if (!world) return;
+	FHitResult hit;
+	FVector start = UpdatedComponent->GetComponentLocation() + (UpdatedComponent->GetUpVector() * 100);
+	FVector end = UpdatedComponent->GetUpVector() * 100 + start;
+	DrawDebugLine(world, start, end, FColor::Red);
+
+	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+
+	if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hit.GetActor()))
+	{
+		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
+		box->SetCollisionProfileName("OverlapAllDynamic");
+	}
+}
+
+void UMMovementComponent::CheckBellow()
+{
+	UWorld* world = GetWorld();
+	if (!world) return;
+	FHitResult hit;
+	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
+	FVector end = -UpdatedComponent->GetUpVector() * 100 + start;
+	DrawDebugLine(world, start, end, FColor::Red);
+
+	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+
+	if (hit.GetActor())
+	{
+		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
+		box->SetCollisionProfileName("BlockAllDynamic");
+	}
+}
+
+void UMMovementComponent::DropDown()
+{
+	UWorld* world = GetWorld();
+	if (!world) return;
+	FHitResult hit;
+	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
+	FVector end = -UpdatedComponent->GetUpVector() * 100 + start;
+	DrawDebugLine(world, start, end, FColor::Red);
+
+	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+
+	if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hit.GetActor()))
+	{
+		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
+		box->SetCollisionProfileName("OverlapAllDynamic");
+	}
 }
 

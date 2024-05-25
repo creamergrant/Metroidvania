@@ -52,6 +52,7 @@ AMCharacter::AMCharacter()
 	bUseControllerRotationRoll = false;
 
 	m_moveComp = CreateDefaultSubobject<UMMovementComponent>("MoveComp");
+	m_moveComp->UpdatedComponent = m_movement;
 
 	m_dashComp = CreateDefaultSubobject<UMDashComponent>("DashComp");
 

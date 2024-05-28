@@ -19,3 +19,13 @@ void AMGameModeBase::InitGame(const FString& MapName, const FString& Options, FS
 	FString selectedSaveSlot = UGameplayStatics::ParseOption(Options, "SaveGame");
 	sg->LoadSaveGame(selectedSaveSlot);
 }
+
+void AMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	UMSaveGameSubsystem* sg = GetGameInstance()->GetSubsystem<UMSaveGameSubsystem>();
+	sg->HandlePlayer(NewPlayer);
+
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	sg->OverrideSpawnTransform(NewPlayer);
+}

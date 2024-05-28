@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "MSaveGame.h"
 #include "MPlayerState.generated.h"
 
 class UMSaveGame;
@@ -21,6 +22,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Currency")
 	int32 m_currency;
+
+	uint32 m_components;
 
 	void LoadPlayerState(UMSaveGame* SaveObject);
 

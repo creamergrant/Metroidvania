@@ -6,9 +6,24 @@
 #include "GameFramework/SaveGame.h"
 #include "MSaveGame.generated.h"
 
-/**
- * 
- */
+
+UENUM(meta = (Bitflags))
+enum class ESaveComponents
+{
+	None = 0,
+	HorizontalSpell = 1 << 1
+};
+
+static bool TestBit(uint32 num, ESaveComponents comp)
+{
+	return (((num) & (1 << static_cast<uint32>(comp))) > 0);
+}
+
+static void SetBit(uint32& num, ESaveComponents comp)
+{
+	num |= 1 << static_cast<uint32>(comp);
+}
+
 USTRUCT()
 struct FActorSaveData
 {
@@ -40,6 +55,9 @@ public:
 
 	UPROPERTY()
 	FVector m_location;
+
+	UPROPERTY()
+	uint8 m_components;
 };
 
 UCLASS()

@@ -3,6 +3,7 @@
 
 #include "MPlayerState.h"
 #include "MSaveGame.h"
+#include "MCharacter.h"
 
 AMPlayerState::AMPlayerState() :
 	APlayerState()
@@ -18,6 +19,7 @@ void AMPlayerState::LoadPlayerState(UMSaveGame* SaveObject)
 		if (data)
 		{
 			m_currency = data->m_currency;
+			m_components = data->m_components;
 		}
 		else
 		{
@@ -36,6 +38,7 @@ void AMPlayerState::SavePlayerState(UMSaveGame* SaveObject)
 		if (APawn* pawn = GetPawn())
 		{
 			data.m_location = pawn->GetActorLocation();
+			data.m_components = m_components;
 		}
 
 		SaveObject->m_savedPlayer = data;

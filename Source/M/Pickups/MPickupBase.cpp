@@ -6,6 +6,7 @@
 #include "PaperSpriteComponent.h"
 #include "MHorizontalSpell.h"
 #include "MCharacter.h"
+#include "MPlayerState.h"
 
 // Sets default values
 AMPickupBase::AMPickupBase()
@@ -57,6 +58,11 @@ void AMPickupBase::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompon
 	AMCharacter* Character = Cast<AMCharacter>(OtherActor);
 	if (Character)
 	{
+		AMPlayerState* ps = Cast<AMPlayerState>(Character->GetPlayerState());
+		if (ps)
+		{
+			SetBit(ps->m_components, ESaveComponents::HorizontalSpell);
+		}
 		Character->m_spell = NewObject<UMHorizontalSpell>();
 		Character->m_spell->Rename(new TCHAR('a'), Character);
 		Character->m_spell->RegisterComponent();

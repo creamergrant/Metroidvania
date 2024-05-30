@@ -45,7 +45,7 @@ void UMMovementComponent::BeginPlay()
 	//check(Box != nullptr); //pseudo if statement that lets me know that i can use updated primitive freely without needing to if check it all the time.
 	if (Box)
 	{
-		FVector HalfExtent = Box->GetScaledBoxExtent() / 2.0f;
+		FVector HalfExtent = Box->GetScaledBoxExtent();
 		FVector3f RealHalfExtent = { (float)HalfExtent.X, (float)HalfExtent.Y, (float)HalfExtent.Z };
 		m_sweepShape.SetBox(RealHalfExtent);
 	}
@@ -90,36 +90,42 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 	if (!m_bIsJumping && m_bIsAirborne)
 	{
-		CheckBellow();
+		CheckBelow();
 	}
 	
 	
 	if (!FMath::IsNearlyZero(m_movementValue.X))
 	{
-		FVector Delta = { -m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f }; //Need that added z value or the character gets stuck on ledges from the sweep.
-		UpdatedPrimitive->SetWorldLocation(UpdatedPrimitive->GetComponentLocation() + Delta, true); //Need the sweep or character can sort of stick to walls
+		FVector Delta = { -m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f };
+		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true);
 	}
 	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue.Y));
 
 	if (m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax)
 	{
 		float JumpHeightMultiplier = m_jumpCurve->GetFloatValue(m_jumpTimeCurrent); //get multiplier at current time
-		FVector CompPos = UpdatedPrimitive->GetComponentLocation();
 
-		FVector Delta = { CompPos.X, CompPos.Y, m_startJumpHeight + m_maxJumpHeight * JumpHeightMultiplier };
-		UpdatedPrimitive->SetWorldLocation(Delta, true);
+		FHitResult Hit;
+
+		FVector Delta = { 0, 0, m_maxJumpHeight * JumpHeightMultiplier };
+		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true, &Hit, ETeleportType::None);
 
 		m_jumpTimeCurrent += DeltaTime;
+
+		if (Hit.ImpactNormal.Dot(FVector::UpVector) < -0.5f)
+		{
+			m_bIsJumping = false;
+		}
 	}
-	else if (m_bIsJumping)
+	else if (m_bIsJumping && m_jumpTimeCurrent >= m_jumpTimeMax)
 	{
 		m_bIsJumping = false;
 	}
 }
 
-void UMMovementComponent::Move(const FInputActionValue& Value)
+void UMMovementComponent::Move(const FVector2D& Value)
 {
-	m_movementValue = Value.Get<FVector2D>();
+	m_movementValue = Value;
 }
 
 void UMMovementComponent::Jump()
@@ -141,6 +147,11 @@ void UMMovementComponent::Jump()
 		FTimerHandle SweepEnable;
 		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.016f, false);
 	}
+}
+
+void UMMovementComponent::JumpEnd()
+{
+	m_bIsJumping = false;
 }
 
 void UMMovementComponent::EnableSweepCheck()
@@ -171,7 +182,7 @@ void UMMovementComponent::CheckAbove()
 	}
 }
 
-void UMMovementComponent::CheckBellow()
+void UMMovementComponent::CheckBelow()
 {
 	UWorld* world = GetWorld();
 	if (!world) return;
@@ -206,4 +217,3 @@ void UMMovementComponent::DropDown()
 		box->SetCollisionProfileName("OverlapAllDynamic");
 	}
 }
-

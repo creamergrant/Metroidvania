@@ -57,6 +57,7 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
+	void JumpEnd();
 	void Dash();
 	void Spell();
 

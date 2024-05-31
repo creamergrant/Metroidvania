@@ -22,14 +22,15 @@ public:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Move(const FInputActionValue& Value);
+	void Move(const FVector2D& Value);
 	void Jump();
+	void JumpEnd();
 
 	void EnableSweepCheck();
 	void EndCoyoteTime();
 
 	void CheckAbove();
-	void CheckBellow();
+	void CheckBelow();
 
 	void DropDown();
 
@@ -54,9 +55,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump")
 	float m_maxJumpHeight;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-	float m_startJumpHeight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 	float m_jumpTimeMax;

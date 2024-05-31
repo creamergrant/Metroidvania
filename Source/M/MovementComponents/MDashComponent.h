@@ -28,6 +28,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	class AMCharacter* Character;
+	class AMPlayerController* PC;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dash")
 	bool m_bCanDash;
 
@@ -37,13 +40,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dash")
 	float m_dashDirection;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dash")
+	UPROPERTY(BlueprintReadOnly, Category = "Dash")
 	FTimerHandle m_dashDurationTimer;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dash")
 	float m_dashDurationTimeAmount;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dash")
+	UPROPERTY(BlueprintReadOnly, Category = "Dash")
 	FTimerHandle m_dashCooldownTimer;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dash")

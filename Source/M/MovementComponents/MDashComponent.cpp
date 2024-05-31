@@ -16,11 +16,19 @@ UMDashComponent::UMDashComponent()
 
 	bConstrainToPlane = true;
 	PlaneConstraintNormal = GetPlaneConstraintNormalFromAxisSetting(EPlaneConstraintAxisSetting::Y);
+
+
 }
 
 void UMDashComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Character = Cast<AMCharacter>(UpdatedPrimitive->GetAttachmentRootActor());
+	if (Character)
+	{
+		PC = Cast<AMPlayerController>(Character->Controller);
+	}
 }
 
 void UMDashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -29,8 +37,16 @@ void UMDashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	if (m_bIsDashing)
 	{
-		FVector Delta = { -m_dashDirection * m_dashImpulseValue * DeltaTime, 0.0f, 0.0000001f }; //Need that added z value or the character gets stuck on ledges from the sweep.
-		UpdatedPrimitive->SetWorldLocation(UpdatedPrimitive->GetComponentLocation() + Delta, true); //Need the sweep or character can sort of stick to walls
+		FHitResult Hit;
+		FVector Delta = { -m_dashDirection * m_dashImpulseValue * DeltaTime, 0.0f, 0.0000001f };
+		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true, &Hit, ETeleportType::TeleportPhysics);
+
+		if (Hit.bBlockingHit) // if youve hit something solid, stop the dash.
+		{
+			m_bIsDashing = false;
+			GetWorld()->GetTimerManager().ClearTimer(m_dashDurationTimer);
+			EndDash();
+		}
 	}
 }
 
@@ -39,20 +55,10 @@ void UMDashComponent::Dash()
 	if (!m_bCanDash)
 		return;
 
-	UpdatedPrimitive->SetEnableGravity(false);
+	UpdatedPrimitive->SetSimulatePhysics(false); //stops physics for the character
 
-	AMCharacter* Character = Cast<AMCharacter>(UpdatedPrimitive->GetAttachmentRootActor());
-	if (Character)
-	{
-		Character->StopAllMovement();
-
-		AMPlayerController* PC = Cast<AMPlayerController>(Character->Controller);
-		if (PC)
-		{
-			PC->SetMovementControlLockState(true);
-			m_dashDirection = PC->GetLastDirectionalInput().X;
-		}
-	}
+	PC->SetMovementControlLockState(true);
+	m_dashDirection = PC->GetLastDirectionalInput().X;
 
 	m_bIsDashing = true;
 	m_bCanDash = false;
@@ -62,23 +68,13 @@ void UMDashComponent::Dash()
 
 void UMDashComponent::EndDash()
 {
-	UpdatedPrimitive->SetEnableGravity(true);
-
-	AMCharacter* Character = Cast<AMCharacter>(UpdatedPrimitive->GetAttachmentRootActor());
-	if (Character)
-	{
-		Character->StopAllMovement();
-
-		AMPlayerController* PC = Cast<AMPlayerController>(Character->Controller);
-		if (PC)
-		{
-			PC->SetMovementControlLockState(false);
-		}
-	}
-
+	PC->SetMovementControlLockState(false);
+		
 	m_bIsDashing = false;
 
 	GetWorld()->GetTimerManager().SetTimer(m_dashDurationTimer, this, &UMDashComponent::EnableCanDash, m_dashCooldownTimeAmount, false);
+
+	UpdatedPrimitive->SetSimulatePhysics(true); //resumes physics for the character
 }
 
 void UMDashComponent::EnableCanDash()

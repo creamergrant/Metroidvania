@@ -58,6 +58,4 @@ public:
 	TArray<class UMEquipable*> m_equips;
 
 	void IncreaseStats();
-
-	void StopAllMovement();
 };

@@ -31,6 +31,7 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Completed, this, &AMPlayerController::Move);
 
 		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
+		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Completed, this, &AMPlayerController::JumpEnd);
 
 		EnhancedInputComponent->BindAction(m_dashAction, ETriggerEvent::Triggered, this, &AMPlayerController::Dash);
 
@@ -58,7 +59,6 @@ void AMPlayerController::BeginPlay()
 			Subsystem->AddMappingContext(m_mappingContext, 0);
 		}
 	}
-
 }
 
 void AMPlayerController::ToggleOpen()
@@ -95,18 +95,14 @@ void AMPlayerController::Attack()
 
 void AMPlayerController::Move(const FInputActionValue& Value)
 {
-	m_currentDirectionalInput.X = Value.Get<float>();
+	m_currentDirectionalInput = Value.Get<FVector2D>();
 
 	if (!FMath::IsNearlyZero(m_currentDirectionalInput.X) && !m_bAreMovementControlsLocked)
 		m_lastDirectionalInput.X = m_currentDirectionalInput.X;
 
-	if (FMath::IsNearlyZero(m_currentDirectionalInput.X))
+	if(!m_bAreMovementControlsLocked)
 	{
-		m_character->m_moveComp->Move(Value);
-	}
-	else if(!m_bAreMovementControlsLocked)
-	{
-		m_character->m_moveComp->Move(Value);
+		m_character->m_moveComp->Move(m_currentDirectionalInput);
 	}
 }
 
@@ -116,9 +112,19 @@ void AMPlayerController::Jump()
 		m_character->m_moveComp->Jump();
 }
 
+void AMPlayerController::JumpEnd()
+{
+	m_character->m_moveComp->JumpEnd();
+}
+
 void AMPlayerController::Dash()
 {
-	m_character->m_dashComp->Dash();
+	if (!m_bAreMovementControlsLocked)
+	{
+		m_character->m_dashComp->Dash();
+		JumpEnd();
+		m_character->m_moveComp->Move(FVector2D::ZeroVector);
+	}
 }
 
 void AMPlayerController::Spell()

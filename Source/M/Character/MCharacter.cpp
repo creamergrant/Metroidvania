@@ -41,7 +41,7 @@ AMCharacter::AMCharacter()
 	m_springArm->SocketOffset = FVector(0, 0, 300);
 	m_springArm->SetRelativeRotation(FRotator(0, -90.0f, 0));
 	m_springArm->TargetArmLength = 500.0f;
-	m_springArm->bEnableCameraLag = true;
+	m_springArm->bEnableCameraLag = false;
 	m_springArm->CameraLagSpeed = 30.0f;
 
 	m_camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -123,11 +123,3 @@ void AMCharacter::IncreaseStats()
 		}
 	}
 }
-
-void AMCharacter::StopAllMovement()
-{
-	m_dashComp->StopMovementImmediately();
-	m_moveComp->StopMovementImmediately();
-}
-
-

@@ -16,6 +16,8 @@ UMDashComponent::UMDashComponent()
 
 	bConstrainToPlane = true;
 	PlaneConstraintNormal = GetPlaneConstraintNormalFromAxisSetting(EPlaneConstraintAxisSetting::Y);
+
+
 }
 
 void UMDashComponent::BeginPlay()
@@ -35,9 +37,16 @@ void UMDashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	if (m_bIsDashing)
 	{
-
+		FHitResult Hit;
 		FVector Delta = { -m_dashDirection * m_dashImpulseValue * DeltaTime, 0.0f, 0.0000001f };
-		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true);
+		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true, &Hit, ETeleportType::TeleportPhysics);
+
+		if (Hit.bBlockingHit) // if youve hit something solid, stop the dash.
+		{
+			m_bIsDashing = false;
+			GetWorld()->GetTimerManager().ClearTimer(m_dashDurationTimer);
+			EndDash();
+		}
 	}
 }
 
@@ -46,9 +55,7 @@ void UMDashComponent::Dash()
 	if (!m_bCanDash)
 		return;
 
-	Character->StopAllMovement();
-
-	//UpdatedPrimitive->SetSimulatePhysics(false);
+	UpdatedPrimitive->SetSimulatePhysics(false); //stops physics for the character
 
 	PC->SetMovementControlLockState(true);
 	m_dashDirection = PC->GetLastDirectionalInput().X;
@@ -61,15 +68,13 @@ void UMDashComponent::Dash()
 
 void UMDashComponent::EndDash()
 {
-	Character->StopAllMovement();
-
 	PC->SetMovementControlLockState(false);
 		
 	m_bIsDashing = false;
 
 	GetWorld()->GetTimerManager().SetTimer(m_dashDurationTimer, this, &UMDashComponent::EnableCanDash, m_dashCooldownTimeAmount, false);
 
-	//UpdatedPrimitive->SetSimulatePhysics(true);
+	UpdatedPrimitive->SetSimulatePhysics(true); //resumes physics for the character
 }
 
 void UMDashComponent::EnableCanDash()

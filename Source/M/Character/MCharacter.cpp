@@ -123,11 +123,3 @@ void AMCharacter::IncreaseStats()
 		}
 	}
 }
-
-void AMCharacter::StopAllMovement()
-{
-	m_dashComp->StopMovementImmediately();
-	m_moveComp->StopMovementImmediately();
-}
-
-

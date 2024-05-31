@@ -57,9 +57,6 @@ protected:
 	float m_maxJumpHeight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-	float m_startJumpHeight;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 	float m_jumpTimeMax;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")

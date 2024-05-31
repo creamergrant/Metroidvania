@@ -31,6 +31,7 @@ void AMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(m_moveAction, ETriggerEvent::Completed, this, &AMPlayerController::Move);
 
 		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Triggered, this, &AMPlayerController::Jump);
+		EnhancedInputComponent->BindAction(m_jumpAction, ETriggerEvent::Completed, this, &AMPlayerController::JumpEnd);
 
 		EnhancedInputComponent->BindAction(m_dashAction, ETriggerEvent::Triggered, this, &AMPlayerController::Dash);
 

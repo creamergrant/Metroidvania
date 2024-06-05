@@ -52,6 +52,7 @@ void AMHorizontalSpellProjectile::OnBeginOverlap(UPrimitiveComponent* Overlapped
 {
 	if (Cast<AMTestingObject>(Other))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "git gud");
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Horizontal Spell Hit");
+		Destroy();
 	}
 }

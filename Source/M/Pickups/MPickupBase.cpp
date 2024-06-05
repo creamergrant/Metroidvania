@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "PaperSpriteComponent.h"
 #include "MHorizontalSpell.h"
+#include "MAcceleratingSpell.h"
 #include "MCharacter.h"
 #include "MPlayerState.h"
 
@@ -61,9 +62,9 @@ void AMPickupBase::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompon
 		AMPlayerState* ps = Cast<AMPlayerState>(Character->GetPlayerState());
 		if (ps)
 		{
-			SetBit(ps->m_components, ESaveComponents::HorizontalSpell);
+			SetBit(ps->m_components, ESaveComponents::AcceleratingSpell);
 		}
-		Character->m_spell = NewObject<UMHorizontalSpell>();
+		Character->m_spell = NewObject<UMAcceleratingSpell>();
 		Character->m_spell->Rename(new TCHAR('a'), Character);
 		Character->m_spell->RegisterComponent();
 		OnPickup();

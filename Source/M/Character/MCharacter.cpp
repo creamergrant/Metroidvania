@@ -11,6 +11,7 @@
 #include "MEquipable.h"
 #include "MPlayerState.h"
 #include "MHorizontalSpell.h"
+#include "MAcceleratingSpell.h"
 #include "MSaveGame.h"
 
 // Sets default values
@@ -70,9 +71,16 @@ void AMCharacter::BeginPlay()
 	Super::BeginPlay();
 	if (AMPlayerState* ps = Cast<AMPlayerState>(GetPlayerState()))
 	{
-		if (TestBit(ps->m_components, ESaveComponents::HorizontalSpell))
+		//if (TestBit(ps->m_components, ESaveComponents::HorizontalSpell))
+		//{
+		//	m_spell = NewObject<UMHorizontalSpell>();
+		//	m_spell->Rename(new TCHAR('a'), this);
+		//	m_spell->RegisterComponent();
+		//}
+
+		if (TestBit(ps->m_components, ESaveComponents::AcceleratingSpell))
 		{
-			m_spell = NewObject<UMHorizontalSpell>();
+			m_spell = NewObject<UMAcceleratingSpell>();
 			m_spell->Rename(new TCHAR('a'), this);
 			m_spell->RegisterComponent();
 		}

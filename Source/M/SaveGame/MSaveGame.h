@@ -24,6 +24,11 @@ static void SetBit(uint32& num, ESaveComponents comp)
 	num |= 1 << static_cast<uint32>(comp);
 }
 
+static void ClearBit(uint32& num, ESaveComponents comp)
+{
+	num &= ~(1 << static_cast<uint32>(comp));
+}
+
 USTRUCT()
 struct FActorSaveData
 {

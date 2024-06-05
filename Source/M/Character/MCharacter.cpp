@@ -61,6 +61,7 @@ AMCharacter::AMCharacter()
 
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
 	m_combatComp->SetupAttachment(RootComponent);
+	m_combatComp->SetVisibility(true);
 }
 
 // Called when the game starts or when spawned

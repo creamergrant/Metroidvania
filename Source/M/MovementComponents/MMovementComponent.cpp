@@ -13,15 +13,15 @@
 UMMovementComponent::UMMovementComponent()
 {
 	m_movementValue = { 0.0f, 0.0f };
-	m_movementSpeed = 500.0f;
+	m_movementSpeed = 1000.0f;
 
-	m_maxJumpHeight = 100.0f;
+	m_maxJumpHeight = 1.0f;
 	m_jumpTimeMax = 0.0f;
 	m_jumpTimeCurrent = 0.0f;
 	m_bIsJumping = false;
 	m_bIsAirborne = false;
 	m_bDoSweep = true;
-	m_coyoteTimeAmount = 0.25f;
+	m_coyoteTimeAmount = 0.01f; //experiment with this
 	m_sweepStartOffset = 0.0f;
 	m_sweepDistance = 100.0f;
 
@@ -47,7 +47,7 @@ void UMMovementComponent::BeginPlay()
 		FVector3f RealHalfExtent = { (float)HalfExtent.X, (float)HalfExtent.Y, (float)HalfExtent.Z };
 		m_sweepShape.SetBox(RealHalfExtent);
 	}
-	
+
 	m_sweepQueryParams.AddIgnoredComponent(UpdatedPrimitive);
 
 	if (m_jumpCurve)
@@ -81,7 +81,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 
-	if (m_bIsAirborne)
+	if (m_bIsAirborne) // can't go up thru one way if this check is in
 	{
 		CheckAbove();
 	}
@@ -89,7 +89,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	{
 		CheckBelow();
 	}
-	
+
 	if (!FMath::IsNearlyZero(m_movementValue.X))
 	{
 		FVector Delta = { -m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f };
@@ -117,7 +117,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 	else if (m_bIsJumping && m_jumpTimeCurrent >= m_jumpTimeMax)
 	{
-   		m_bIsJumping = false;
+		m_bIsJumping = false;
 		m_jumpTimeCurrent = m_jumpTimeMax + 1.0f; //sets condition to prevent perma jump held bouncing
 	}
 }
@@ -164,11 +164,14 @@ void UMMovementComponent::EndCoyoteTime()
 
 void UMMovementComponent::CheckAbove()
 {
+	if (!m_bIsJumping)
+		return;
+
 	UWorld* world = GetWorld();
 	if (!world) return;
 	FHitResult hit;
 	FVector start = UpdatedComponent->GetComponentLocation() + (UpdatedComponent->GetUpVector() * 100);
-	FVector end = UpdatedComponent->GetUpVector() * 100 + start;
+	FVector end = UpdatedComponent->GetUpVector() * 100 + start; // distance needs to change so player doesnt fall through things after DropDown()
 	DrawDebugLine(world, start, end, FColor::Red);
 
 	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
@@ -213,5 +216,7 @@ void UMMovementComponent::DropDown()
 	{
 		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
 		box->SetCollisionProfileName("OverlapAllDynamic");
+
+		m_bIsAirborne = true;
 	}
 }

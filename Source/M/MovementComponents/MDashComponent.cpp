@@ -10,7 +10,7 @@ UMDashComponent::UMDashComponent()
 	m_bCanDash = true;
 	m_bIsDashing = false;
 	m_dashDirection = 1.0f;
-	m_dashCooldownTimeAmount = 5.0f;
+	m_dashCooldownTimeAmount = 1.0f; //absolute max, 5.0 is insane
 	m_dashDurationTimeAmount = 0.5f;
 	m_dashImpulseValue = 10000.0f;
 

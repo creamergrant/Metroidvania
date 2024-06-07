@@ -74,6 +74,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		if (!bFoundHit && !World->GetTimerManager().IsTimerActive(m_coyoteTimeTimer) && !m_bIsAirborne)
 		{
 			World->GetTimerManager().SetTimer(m_coyoteTimeTimer, this, &UMMovementComponent::EndCoyoteTime, m_coyoteTimeAmount, false);
+			m_bIsAirborne = true;
 		}
 		else if (bFoundHit)
 		{
@@ -82,13 +83,13 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 
-	if (m_bIsJumping) // can't go up thru one way if this check is in
+	if (m_bIsJumping)
 	{
 		CheckAbove();
 	}
 	if (!m_bIsJumping && m_bIsAirborne)
 	{
-		CheckBelow();
+		CheckBellow();
 	}
 
 	if (UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent))

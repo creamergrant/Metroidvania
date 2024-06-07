@@ -83,7 +83,7 @@ void AMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
+	
 }
 
 void AMCharacter::IncreaseStats()

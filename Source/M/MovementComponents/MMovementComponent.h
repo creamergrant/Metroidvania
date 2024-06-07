@@ -30,9 +30,13 @@ public:
 	void EndCoyoteTime();
 
 	void CheckAbove();
-	void CheckBelow();
+	void CheckBellow();
 
 	void DropDown();
+
+	void CheckSides();
+
+	TArray<FHitResult> ShapeCast(UWorld* world, FVector start, FVector end, FCollisionShape shape);
 
 protected:
 
@@ -85,4 +89,6 @@ protected:
 
 	FCollisionShape m_sweepShape;
 	FCollisionQueryParams m_sweepQueryParams;
+	
+	bool m_bCanJump = true;
 };

@@ -30,7 +30,7 @@ public:
 	void EndCoyoteTime();
 
 	void CheckAbove();
-	void CheckBelow();
+	void CheckBellow();
 
 	void DropDown();
 
@@ -85,4 +85,6 @@ protected:
 
 	FCollisionShape m_sweepShape;
 	FCollisionQueryParams m_sweepQueryParams;
+
+	bool m_bCanJump = true;
 };

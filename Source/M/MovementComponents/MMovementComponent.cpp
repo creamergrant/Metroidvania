@@ -49,6 +49,7 @@ void UMMovementComponent::BeginPlay()
 	}
 
 	m_sweepQueryParams.AddIgnoredComponent(UpdatedPrimitive);
+	m_sweepQueryParams.AddIgnoredActor(GetOwner());
 
 	if (m_jumpCurve)
 	{
@@ -81,13 +82,21 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 
-	if (m_bIsAirborne) // can't go up thru one way if this check is in
+	if (m_bIsJumping) // can't go up thru one way if this check is in
 	{
 		CheckAbove();
 	}
 	if (!m_bIsJumping && m_bIsAirborne)
 	{
 		CheckBelow();
+	}
+
+	if (UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent))
+	{
+		if (box->GetCollisionProfileName().IsEqual("OverlapAllDynamic"))
+		{
+			CheckSides();
+		}
 	}
 
 	if (!FMath::IsNearlyZero(m_movementValue.X))
@@ -139,6 +148,7 @@ void UMMovementComponent::Jump()
 		m_bIsAirborne = true;
 		m_bIsJumping = true;
 		m_bDoSweep = false; //temporary coyote time lockout to prevent quick tap double jumps
+		m_bCanJump = false;
 
 		//enables coyote time shortly after a single frame (assuming 60 fps)
 		FTimerHandle SweepEnable;
@@ -159,42 +169,47 @@ void UMMovementComponent::EnableSweepCheck()
 
 void UMMovementComponent::EndCoyoteTime()
 {
-	m_bIsAirborne = true;
+	m_bCanJump = false;
 }
 
 void UMMovementComponent::CheckAbove()
 {
-	if (!m_bIsJumping)
-		return;
-
 	UWorld* world = GetWorld();
 	if (!world) return;
-	FHitResult hit;
+	TArray<FHitResult> hits;
 	FVector start = UpdatedComponent->GetComponentLocation() + (UpdatedComponent->GetUpVector() * 100);
-	FVector end = UpdatedComponent->GetUpVector() * 100 + start; // distance needs to change so player doesnt fall through things after DropDown()
+	FVector end = UpdatedComponent->GetUpVector() * 100 + start;
+
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(90, 10, 50));
+
 	DrawDebugLine(world, start, end, FColor::Red);
 
-	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+	hits = ShapeCast(world, start, end, shape);
 
-	if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hit.GetActor()))
+	if (hits.Num() == 1)
 	{
-		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
-		box->SetCollisionProfileName("OverlapAllDynamic");
+		if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hits[0].GetActor()))
+		{
+			UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
+			box->SetCollisionProfileName("OverlapAllDynamic");
+		}
 	}
 }
 
-void UMMovementComponent::CheckBelow()
+void UMMovementComponent::CheckBellow()
 {
 	UWorld* world = GetWorld();
 	if (!world) return;
-	FHitResult hit;
+	TArray<FHitResult> hits;
 	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
 	FVector end = -UpdatedComponent->GetUpVector() * 100 + start;
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(90, 10, 50));
+
 	DrawDebugLine(world, start, end, FColor::Red);
 
-	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+	bool hit = world->SweepMultiByChannel(hits, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
 
-	if (hit.GetActor())
+	if (hit)
 	{
 		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
 		box->SetCollisionProfileName("BlockAllDynamic");
@@ -205,18 +220,46 @@ void UMMovementComponent::DropDown()
 {
 	UWorld* world = GetWorld();
 	if (!world) return;
-	FHitResult hit;
+	TArray<FHitResult> hits;
 	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
 	FVector end = -UpdatedComponent->GetUpVector() * 100 + start;
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(90, 10, 50));
+
 	DrawDebugLine(world, start, end, FColor::Red);
 
-	world->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic, m_sweepQueryParams);
+	hits = ShapeCast(world, start, end, shape);
 
-	if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hit.GetActor()))
+	if (hits.Num() == 1)
 	{
-		UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
-		box->SetCollisionProfileName("OverlapAllDynamic");
-
-		m_bIsAirborne = true;
+		if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hits[0].GetActor()))
+		{
+			UBoxComponent* box = Cast<UBoxComponent>(UpdatedComponent);
+			box->SetCollisionProfileName("OverlapAllDynamic");
+		}
 	}
+}
+
+void UMMovementComponent::CheckSides()
+{
+	UWorld* world = GetWorld();
+	if (!world) return;
+	FHitResult hit;
+	FVector start = UpdatedComponent->GetComponentLocation() + (FVector(-m_movementValue.X, 0, 0) * 100);
+	FVector end = FVector(-m_movementValue.X, 0, 0) * 10 + start;
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(10, 10, 90));
+
+	DrawDebugLine(world, start, end, FColor::Red);
+	world->SweepSingleByChannel(hit, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
+
+	if (!Cast<AMOneWayPlatform>(hit.GetActor()))
+	{
+		m_movementValue.X = 0;
+	}
+}
+
+TArray<FHitResult> UMMovementComponent::ShapeCast(UWorld* world, FVector start, FVector end, FCollisionShape shape)
+{
+	TArray<FHitResult> hits;
+	world->SweepMultiByChannel(hits, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
+	return hits;
 }

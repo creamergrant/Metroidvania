@@ -32,11 +32,8 @@ public:
 	void CheckAbove();
 	void CheckBellow();
 
-	void CheckSides();
-
 	void DropDown();
 
-	TArray<FHitResult> ShapeCast(UWorld* world, FVector start, FVector end, FCollisionShape shape);
 protected:
 
 	virtual void BeginPlay() override;

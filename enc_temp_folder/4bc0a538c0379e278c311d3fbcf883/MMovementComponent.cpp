@@ -171,81 +171,21 @@ void UMMovementComponent::CheckAbove()
 	if (!world) return;
 	TArray<FHitResult> hits;
 	FVector start = UpdatedComponent->GetComponentLocation() + (UpdatedComponent->GetUpVector() * 100);
-	FVector end = UpdatedComponent->GetUpVector() * 1 + start;
-
-	FCollisionShape shape = FCollisionShape::MakeBox(FVector(80, 50, 50));
+	FVector end = UpdatedComponent->GetUpVector() * 100 + start;
 
 	DrawDebugLine(world, start, end, FColor::Red);
-	DrawDebugBox(GetWorld(), end, FVector(80, 50, 50), FColor::Red);
 
-	world->SweepMultiByChannel(hits, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
 	
-	for (int i = 0; i < hits.Num(); i++)
-	{
-		if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hits[i].GetActor()))
-		{
-			plat->m_hitBox->SetCollisionProfileName("OneWay");
-		}
-		else
-		{
-			
-		}
-	}
 }
 
 void UMMovementComponent::CheckBellow()
 {
-	UWorld* world = GetWorld();
-	if (!world) return;
-	TArray<FHitResult> hits;
-	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
-	FVector end = -UpdatedComponent->GetUpVector() * 1 + start;
-
-	FCollisionShape shape = FCollisionShape::MakeBox(FVector(80, 10, 10));
-
-	DrawDebugLine(world, start, end, FColor::Red);
-	DrawDebugBox(GetWorld(), end, FVector(80, 10, 10), FColor::Red);
-
-	world->SweepMultiByChannel(hits, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
-
-	for (int i = 0; i < hits.Num(); i++)
-	{
-		if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hits[i].GetActor()))
-		{
-			plat->m_hitBox->SetCollisionProfileName("BlockAll");
-		}
-		else
-		{
-
-		}
-	}
+	
+	
 }
 
 void UMMovementComponent::DropDown()
 {
-	UWorld* world = GetWorld();
-	if (!world) return;
-	TArray<FHitResult> hits;
-	FVector start = UpdatedComponent->GetComponentLocation() + (-UpdatedComponent->GetUpVector() * 100);
-	FVector end = -UpdatedComponent->GetUpVector() * 1 + start;
 
-	FCollisionShape shape = FCollisionShape::MakeBox(FVector(80, 10, 10));
-
-	DrawDebugLine(world, start, end, FColor::Red);
-	DrawDebugBox(GetWorld(), end, FVector(80, 10, 10), FColor::Red);
-
-	world->SweepMultiByChannel(hits, start, end, shape.GetBox().Rotation().Quaternion(), ECC_WorldDynamic, shape, m_sweepQueryParams);
-
-	for (int i = 0; i < hits.Num(); i++)
-	{
-		if (AMOneWayPlatform* plat = Cast<AMOneWayPlatform>(hits[i].GetActor()))
-		{
-			plat->m_hitBox->SetCollisionProfileName("OneWay");
-		}
-		else
-		{
-
-		}
-	}
 }
 

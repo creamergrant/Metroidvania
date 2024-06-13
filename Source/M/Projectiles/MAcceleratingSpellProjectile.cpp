@@ -65,6 +65,12 @@ void AMAcceleratingSpellProjectile::Tick(float DeltaTime)
 			Accelerate();
 		}
 	}
+
+	if (lifetimeTimer > maxLifetime)
+		Explode();
+
+	lifetimeTimer += DeltaTime;
+
 }
 
 void AMAcceleratingSpellProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -72,18 +78,38 @@ void AMAcceleratingSpellProjectile::OnBeginOverlap(UPrimitiveComponent* Overlapp
 	if (Cast<AMTestingObject>(Other))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit");
-		Destroy();
+		Explode();
 	}
 }
 
 void AMAcceleratingSpellProjectile::Accelerate()
 {
+	//starts slow, speeds up
 	if (m_moveComp->Velocity.X > 0)
 	{
-		m_moveComp->Velocity.X += 25.0f;
+		if (m_moveComp->Velocity.X > 100.0f)
+		{
+			m_moveComp->Velocity.X += 100.0f;
+		}
+		else
+		{
+			m_moveComp->Velocity.X += 5.0f;
+		}
 	}
 	else if (m_moveComp->Velocity.X < 0)
 	{
-		m_moveComp->Velocity.X -= 25.0f;
+		if (m_moveComp->Velocity.X < -100.0f)
+		{
+			m_moveComp->Velocity.X -= 100.0f;
+		}
+		else
+		{
+			m_moveComp->Velocity.X -= 5.0f;
+		}
 	}
+}
+
+void AMAcceleratingSpellProjectile::Explode()
+{
+	Destroy();
 }

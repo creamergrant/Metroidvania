@@ -23,7 +23,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	void Accelerate();
+	void Explode();
 
+	float lifetimeTimer = 0.0f;
+	float maxLifetime = 1.0f;
 public:
 	virtual void Tick(float DeltaTime) override;
 

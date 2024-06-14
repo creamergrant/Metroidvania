@@ -80,6 +80,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		{
 			World->GetTimerManager().ClearTimer(m_coyoteTimeTimer);
 			m_bIsAirborne = false;
+			m_bCanJump = true;
 		}
 	}
 
@@ -136,7 +137,7 @@ void UMMovementComponent::Jump()
 		DropDown();
 		return;
 	}
-	if (!m_bIsAirborne && !m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax) //last condition is to prevent perma bounce if jump is held
+	if (m_bCanJump && !m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax) //last condition is to prevent perma bounce if jump is held
 	{
 		m_bIsAirborne = true;
 		m_bIsJumping = true;

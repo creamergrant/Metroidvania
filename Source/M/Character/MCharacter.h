@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UMSpellComponent* m_spell;
 
+	UPROPERTY(EditAnywhere, Category = Movement)
+	class UMDoubleJumpComponent* m_doubleJump;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

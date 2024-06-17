@@ -87,4 +87,6 @@ protected:
 	FCollisionQueryParams m_sweepQueryParams;
 
 	bool m_bCanJump = true;
+
+	class AMCharacter* m_character;
 };

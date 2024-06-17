@@ -13,6 +13,7 @@
 #include "MHorizontalSpell.h"
 #include "MAcceleratingSpell.h"
 #include "MSaveGame.h"
+#include "MDoubleJumpComponent.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -63,6 +64,8 @@ AMCharacter::AMCharacter()
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
 	m_combatComp->SetupAttachment(RootComponent);
 	m_combatComp->SetVisibility(true);
+
+	m_doubleJump = CreateDefaultSubobject<UMDoubleJumpComponent>("DoubleJump");
 }
 
 // Called when the game starts or when spawned

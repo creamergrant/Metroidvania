@@ -9,6 +9,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "InputActionValue.h"
 #include "MOneWayPlatform.h"
+#include "MCharacter.h"
+#include "MDoubleJumpComponent.h"
 
 UMMovementComponent::UMMovementComponent()
 {
@@ -56,6 +58,7 @@ void UMMovementComponent::BeginPlay()
 		float temp;
 		m_jumpCurve->GetTimeRange(temp, m_jumpTimeMax);
 	}
+	m_character = Cast<AMCharacter>(UpdatedComponent->GetOwner());
 }
 
 void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -154,6 +157,10 @@ void UMMovementComponent::JumpEnd()
 {
 	m_bIsJumping = false;
 	m_jumpTimeCurrent = 0.0f;
+	if (m_character->m_doubleJump && m_bIsAirborne)
+	{
+		m_bCanJump = true;
+	}
 }
 
 void UMMovementComponent::EnableSweepCheck()

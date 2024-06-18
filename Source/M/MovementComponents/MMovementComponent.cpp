@@ -157,7 +157,7 @@ void UMMovementComponent::JumpEnd()
 {
 	m_bIsJumping = false;
 	m_jumpTimeCurrent = 0.0f;
-	if (m_character->m_doubleJump && m_bIsAirborne)
+	if (AMCharacter::ContainsClassType<UMDoubleJumpComponent>(m_character->m_movementComps) && m_bIsAirborne)
 	{
 		m_bCanJump = true;
 	}

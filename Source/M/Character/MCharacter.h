@@ -40,7 +40,7 @@ public:
 	class UMSpellComponent* m_spell;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	class UMDoubleJumpComponent* m_doubleJump;
+	TArray<USceneComponent*> m_movementComps;
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,4 +61,15 @@ public:
 	TArray<class UMEquipable*> m_equips;
 
 	void IncreaseStats();
+
+	template<typename T>
+	static bool ContainsClassType(const TArray<USceneComponent*>& array)
+	{
+		for (USceneComponent* comp : array)
+		{
+			if (comp && comp->IsA(T::StaticClass()))
+				return true;
+		}
+		return false;
+	}
 };

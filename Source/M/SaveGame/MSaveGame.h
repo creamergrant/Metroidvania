@@ -11,13 +11,14 @@ UENUM(meta = (Bitflags))
 enum class ESaveComponents
 {
 	None = 0,
-	//HorizontalSpell = 1 << 1
-	AcceleratingSpell = 1 << 1
+	HorizontalSpell = 1 << 0,
+	AcceleratingSpell = 1 << 1,
+	DoubleJump = 1 << 2
 };
 
 static bool TestBit(uint32 num, ESaveComponents comp)
 {
-	return (((num) & (1 << static_cast<uint32>(comp))) > 0);
+	return (static_cast<uint32>(comp) & num) != 0;
 }
 
 static void SetBit(uint32& num, ESaveComponents comp)

@@ -3,35 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "MPickupBase.generated.h"
+#include "MPickupBase.h"
+#include "MSpellPickup.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class M_API AMPickupBase : public AActor
+class M_API AMSpellPickup : public AMPickupBase
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	AMPickupBase();
+public:
 
-	UPROPERTY(EditAnywhere, Category = HitBox)
-	class UBoxComponent* m_collision;
+	AMSpellPickup();
 
-	UPROPERTY(EditAnywhere, Category = HitBox)
-	class UPaperSpriteComponent* m_sprite;
+	UPROPERTY(EditAnywhere, Category = Pickup)
+	TSubclassOf<class UMSpellComponent> ComponentClass;
 
 	virtual void OnPickup();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
 	virtual void OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-public:	
-	// Called every frame
+public:
 	virtual void Tick(float DeltaTime) override;
-
 };

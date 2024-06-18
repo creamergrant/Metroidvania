@@ -4,10 +4,6 @@
 #include "MPickupBase.h"
 #include "Components/BoxComponent.h"
 #include "PaperSpriteComponent.h"
-#include "MHorizontalSpell.h"
-#include "MAcceleratingSpell.h"
-#include "MCharacter.h"
-#include "MPlayerState.h"
 
 // Sets default values
 AMPickupBase::AMPickupBase()
@@ -53,20 +49,5 @@ void AMPickupBase::Tick(float DeltaTime)
 
 void AMPickupBase::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!OtherActor || !OtherComp || OtherActor == this || OtherComp->GetAttachParentActor() == this)
-		return;
-
-	AMCharacter* Character = Cast<AMCharacter>(OtherActor);
-	if (Character)
-	{
-		AMPlayerState* ps = Cast<AMPlayerState>(Character->GetPlayerState());
-		if (ps)
-		{
-			SetBit(ps->m_components, ESaveComponents::AcceleratingSpell);
-		}
-		Character->m_spell = NewObject<UMAcceleratingSpell>();
-		Character->m_spell->Rename(new TCHAR('a'), Character);
-		Character->m_spell->RegisterComponent();
-		OnPickup();
-	}
+	
 }

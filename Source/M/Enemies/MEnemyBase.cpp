@@ -7,6 +7,10 @@
 
 AMEnemyBase::AMEnemyBase()
 {
+	m_bIsWalking = false;
+	m_walkSpeed = 100.0f;
+	m_direction = GetActorForwardVector();
+
 	m_ledgeDetector = CreateDefaultSubobject<UBoxComponent>("LedgeDetector");
 	m_ledgeDetector->SetupAttachment(RootComponent);
 	m_ledgeDetector->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
@@ -18,16 +22,27 @@ AMEnemyBase::AMEnemyBase()
 	m_wallDetector->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_wallDetector->SetCollisionProfileName("OverlapAll");
 	m_wallDetector->OnComponentBeginOverlap.AddDynamic(this, &AMEnemyBase::ComponentOverlapBegin);
-
-	m_direction = GetActorForwardVector();
 }
 
 void AMEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector Delta = (m_direction * 50) * DeltaTime;
-	GetCharacterMovement()->MoveUpdatedComponent(Delta, GetActorRotation(), true);
+	if (m_bIsWalking)
+	{
+		FVector Delta = (m_direction * m_walkSpeed) * DeltaTime;
+		GetCharacterMovement()->MoveUpdatedComponent(Delta, GetActorRotation(), true);
+	}
+}
+
+void AMEnemyBase::SetIsWalking(bool bIsWalking)
+{
+	m_bIsWalking = bIsWalking;
+}
+
+bool AMEnemyBase::GetIsWalking()
+{
+	return m_bIsWalking;
 }
 
 void AMEnemyBase::BeginPlay()

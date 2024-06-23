@@ -33,9 +33,9 @@ void AMMovementPickup::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCo
 			if (m_component->GetFName().IsEqual("MDoubleJumpComponent"))
 			{
 				SetBit(ps->m_components, ESaveComponents::DoubleJump);
+				Character->m_movementComps.Add(m_component->GetName(), NewObject<USceneComponent>(Character, m_component));
 			}
 		}
-		Character->m_movementComps.Add(NewObject<USceneComponent>(Character, m_component));
 		OnPickup();
 	}
 }

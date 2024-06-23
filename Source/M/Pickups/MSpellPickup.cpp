@@ -5,6 +5,10 @@
 #include "MCharacter.h"
 #include "MPlayerState.h"
 #include "MSpellComponent.h"
+#include "MHorizontalSpell.h"
+#include "MHorizontalSpellProjectile.h"
+#include "MAcceleratingSpell.h"
+#include "MAcceleratingSpellProjectile.h"
 
 AMSpellPickup::AMSpellPickup()
 {
@@ -39,14 +43,22 @@ void AMSpellPickup::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompo
 			if (ComponentClass->GetFName().IsEqual("MAcceleratingSpell"))
 			{
 				SetBit(ps->m_components, ESaveComponents::AcceleratingSpell);
+
+				UMAcceleratingSpell* spell = NewObject<UMAcceleratingSpell>(Character, ComponentClass);
+				spell->Rename(new TCHAR('a'), Character);
+				spell->m_projectile = AMAcceleratingSpellProjectile::StaticClass();
+				Character->m_spells.Add("MAcceleratingSpell", spell);
 			}
 			if (ComponentClass->GetFName().IsEqual("MHorizontalSpell"))
 			{
 				SetBit(ps->m_components, ESaveComponents::HorizontalSpell);
+
+				UMHorizontalSpell* spell = NewObject<UMHorizontalSpell>(Character, ComponentClass);
+				spell->Rename(new TCHAR('a'), Character);
+				spell->m_projectile = AMHorizontalSpellProjectile::StaticClass();
+				Character->m_spells.Add("MHoriztonalSpell", spell);
 			}
 		}
-		Character->m_spell = NewObject<UMSpellComponent>(Character, ComponentClass);
-		Character->m_spell->RegisterComponent();
 		OnPickup();
 	}
 }

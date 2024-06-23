@@ -37,10 +37,10 @@ public:
 	class UMCombatComponent* m_combatComp;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
-	class UMSpellComponent* m_spell;
+	TMap<FString, class UMSpellComponent*> m_spells;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	TArray<USceneComponent*> m_movementComps;
+	TMap<FString, USceneComponent*> m_movementComps;
 
 protected:
 	// Called when the game starts or when spawned
@@ -62,14 +62,5 @@ public:
 
 	void IncreaseStats();
 
-	template<typename T>
-	static bool ContainsClassType(const TArray<USceneComponent*>& array)
-	{
-		for (USceneComponent* comp : array)
-		{
-			if (comp && comp->IsA(T::StaticClass()))
-				return true;
-		}
-		return false;
-	}
+	
 };

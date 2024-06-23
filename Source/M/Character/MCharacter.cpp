@@ -76,19 +76,21 @@ void AMCharacter::BeginPlay()
 	{
 		if (TestBit(ps->m_components, ESaveComponents::HorizontalSpell))
 		{
-			m_spell = NewObject<UMHorizontalSpell>();
-			m_spell->Rename(new TCHAR('a'), this);
-			m_spell->RegisterComponent();
+			UMSpellComponent* spell = NewObject<UMHorizontalSpell>();
+			spell->Rename(new TCHAR('a'), this);
+			spell->RegisterComponent();
+			m_spells.Add("MHorizontalSpell", spell);
 		}
 		if (TestBit(ps->m_components, ESaveComponents::AcceleratingSpell))
 		{
-			m_spell = NewObject<UMAcceleratingSpell>();
-			m_spell->Rename(new TCHAR('a'), this);
-			m_spell->RegisterComponent();
+			UMSpellComponent* spell = NewObject<UMHorizontalSpell>();
+			spell->Rename(new TCHAR('a'), this);
+			spell->RegisterComponent();
+			m_spells.Add("MAcceleratingSpell", spell);
 		}
 		if (TestBit(ps->m_components, ESaveComponents::DoubleJump))
 		{
-			m_movementComps.Add(NewObject<UMDoubleJumpComponent>());
+			m_movementComps.Add(FString("MDoubleJumpComponent"), NewObject<UMDoubleJumpComponent>());
 		}
 	}
 }

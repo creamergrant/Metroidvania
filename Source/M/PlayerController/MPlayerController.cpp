@@ -129,9 +129,9 @@ void AMPlayerController::Dash()
 
 void AMPlayerController::Spell()
 {
-	if (m_character->m_spell)
+	if (m_character->m_spells.Contains("MAcceleratingSpell"))
 	{
-		m_character->m_spell->FireSpell();
+		m_character->m_spells["MAcceleratingSpell"]->FireSpell();
 	}
 }
 

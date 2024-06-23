@@ -163,7 +163,7 @@ void UMMovementComponent::JumpEnd()
 	m_jumpTimeCurrent = 0.0f;
 	//UpdatedPrimitive->SetEnableGravity(true);
 
-	if (AMCharacter::ContainsClassType<UMDoubleJumpComponent>(m_character->m_movementComps) && m_bIsAirborne)
+	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne)
 	{
 		m_bCanJump = true;
 	}

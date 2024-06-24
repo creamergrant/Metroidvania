@@ -84,6 +84,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			World->GetTimerManager().ClearTimer(m_coyoteTimeTimer);
 			m_bIsAirborne = false;
 			m_bCanJump = true;
+			m_jumpCount = 0;
 		}
 	}
 
@@ -152,6 +153,7 @@ void UMMovementComponent::Jump()
 		//enables coyote time shortly after a single frame (assuming 60 fps)
 		FTimerHandle SweepEnable;
 		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.017f, false);
+		m_jumpCount++;
 
 		//UpdatedPrimitive->SetEnableGravity(false);
 	}
@@ -163,7 +165,7 @@ void UMMovementComponent::JumpEnd()
 	m_jumpTimeCurrent = 0.0f;
 	//UpdatedPrimitive->SetEnableGravity(true);
 
-	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne)
+   	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_jumpCount == 1)
 	{
 		m_bCanJump = true;
 	}

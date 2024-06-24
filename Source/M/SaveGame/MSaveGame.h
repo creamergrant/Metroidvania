@@ -23,7 +23,7 @@ static bool TestBit(uint32 num, ESaveComponents comp)
 
 static void SetBit(uint32& num, ESaveComponents comp)
 {
-	num |= 1 << static_cast<uint32>(comp);
+	num = num | 1 << static_cast<uint32>(comp);
 }
 
 static void ClearBit(uint32& num, ESaveComponents comp)

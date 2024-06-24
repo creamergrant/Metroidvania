@@ -83,7 +83,7 @@ void AMCharacter::BeginPlay()
 		}
 		if (TestBit(ps->m_components, ESaveComponents::AcceleratingSpell))
 		{
-			UMSpellComponent* spell = NewObject<UMHorizontalSpell>();
+			UMSpellComponent* spell = NewObject<UMAcceleratingSpell>();
 			spell->Rename(new TCHAR('a'), this);
 			spell->RegisterComponent();
 			m_spells.Add("MAcceleratingSpell", spell);

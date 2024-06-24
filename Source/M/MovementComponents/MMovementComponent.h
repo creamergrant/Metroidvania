@@ -89,4 +89,6 @@ protected:
 	bool m_bCanJump = true;
 
 	class AMCharacter* m_character;
+
+	int m_jumpCount = 0;
 };

@@ -42,6 +42,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	TMap<FString, USceneComponent*> m_movementComps;
 
+	UPROPERTY(EditAnywhere, Category = Sprite)
+	class UPaperFlipbookComponent* m_sprite;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
+	class UPaperFlipbook* m_idleAnim;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,6 +55,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void UpdateAnimation();
 
 	float m_movementStat;
 	float m_dmgStat;

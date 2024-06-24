@@ -14,6 +14,8 @@
 #include "MAcceleratingSpell.h"
 #include "MSaveGame.h"
 #include "MDoubleJumpComponent.h"
+#include "PaperFlipbook.h"
+#include "PaperFlipbookComponent.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -65,7 +67,16 @@ AMCharacter::AMCharacter()
 	m_combatComp->SetupAttachment(RootComponent);
 	m_combatComp->SetVisibility(true);
 
-
+	m_sprite = CreateDefaultSubobject<UPaperFlipbookComponent>("Sprite");
+	m_sprite->AlwaysLoadOnClient = true;
+	m_sprite->AlwaysLoadOnServer = true;
+	m_sprite->bOwnerNoSee = false;
+	m_sprite->bAffectDynamicIndirectLighting = true;
+	m_sprite->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_sprite->SetupAttachment(m_movement);
+	static FName CollisionProfileName(TEXT("NoCollision"));
+	m_sprite->SetCollisionProfileName(CollisionProfileName);
+	m_sprite->SetGenerateOverlapEvents(false);
 }
 
 // Called when the game starts or when spawned
@@ -100,7 +111,14 @@ void AMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateAnimation();
+}
 
+void AMCharacter::UpdateAnimation()
+{
+	m_sprite->SetFlipbook(m_idleAnim);
+	m_sprite->SetLooping(true);
+	m_sprite->Play();
 }
 
 void AMCharacter::IncreaseStats()

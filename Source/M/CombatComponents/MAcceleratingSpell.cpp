@@ -4,6 +4,8 @@
 #include "MAcceleratingSpell.h"
 #include "MAcceleratingSpellProjectile.h"
 #include "UObject/ConstructorHelpers.h"
+#include "MCharacter.h"
+#include "PaperFlipbookComponent.h"
 
 UMAcceleratingSpell::UMAcceleratingSpell()
 {
@@ -32,6 +34,9 @@ void UMAcceleratingSpell::FireSpell()
 	{
 		FActorSpawnParameters params;
 		params.Owner = this->GetOwner();
-		GetWorld()->SpawnActor<AMAcceleratingSpellProjectile>(m_projectile, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation(), params);
+
+		AMCharacter* character = Cast<AMCharacter>(GetOwner());
+
+		GetWorld()->SpawnActor<AMAcceleratingSpellProjectile>(m_projectile, GetOwner()->GetActorLocation(), character->GetSpellDirection(), params);
 	}
 }

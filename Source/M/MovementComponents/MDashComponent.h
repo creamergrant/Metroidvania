@@ -24,6 +24,8 @@ public:
 
 	virtual void EnableCanDash();
 
+	bool GetIsDashing() { return m_bIsDashing; }
+
 protected:
 
 	virtual void BeginPlay() override;

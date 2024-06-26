@@ -34,6 +34,11 @@ public:
 
 	void DropDown();
 
+	FVector2D GetMovementValue() { return m_movementValue; }
+
+	bool GetIsAirborne() { return m_bIsAirborne; }
+	bool GetIsJumping() { return m_bIsJumping; }
+
 protected:
 
 	virtual void BeginPlay() override;

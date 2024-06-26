@@ -99,7 +99,7 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 	if (!FMath::IsNearlyZero(m_movementValue.X))
 	{
-		FVector Delta = { -m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f };
+		FVector Delta = { m_movementValue.X * m_movementSpeed * DeltaTime, 0.0f, 0.0000001f };
 		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true);
 	}
 	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Red, FString::SanitizeFloat(m_movementValue.Y));

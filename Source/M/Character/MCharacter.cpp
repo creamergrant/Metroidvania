@@ -63,10 +63,6 @@ AMCharacter::AMCharacter()
 
 	m_dashComp = CreateDefaultSubobject<UMDashComponent>("DashComp");
 
-	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
-	m_combatComp->SetupAttachment(RootComponent);
-	m_combatComp->SetVisibility(true);
-
 	m_sprite = CreateDefaultSubobject<UPaperFlipbookComponent>("Sprite");
 	m_sprite->AlwaysLoadOnClient = true;
 	m_sprite->AlwaysLoadOnServer = true;
@@ -77,6 +73,16 @@ AMCharacter::AMCharacter()
 	static FName CollisionProfileName(TEXT("NoCollision"));
 	m_sprite->SetCollisionProfileName(CollisionProfileName);
 	m_sprite->SetGenerateOverlapEvents(false);
+
+
+	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
+	m_combatComp->SetupAttachment(m_sprite);
+	m_combatComp->SetVisibility(true);
+}
+
+FRotator AMCharacter::GetSpellDirection()
+{
+	return (m_sprite->GetRelativeRotation().Vector() * FRotator(0,180,0).Vector()).Rotation();
 }
 
 // Called when the game starts or when spawned
@@ -111,14 +117,38 @@ void AMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdateAnimation();
+	FVector2D moveVal = m_moveComp->GetMovementValue();
+	if (moveVal.X != 0)
+	{
+		if (moveVal.X > 0)
+			m_sprite->SetRelativeRotation(FRotator(0, 180, 0));
+		if (moveVal.X < 0)
+			m_sprite->SetRelativeRotation(FRotator(FRotator::ZeroRotator));
+	}
+
+	UpdateAnimation(moveVal.X);
 }
 
-void AMCharacter::UpdateAnimation()
+void AMCharacter::UpdateAnimation(float xInput)
 {
-	m_sprite->SetFlipbook(m_idleAnim);
-	m_sprite->SetLooping(true);
-	m_sprite->Play();
+	if (m_dashComp->GetIsDashing())
+	{
+		SwapAnimation(m_dashAnim);
+	}
+	else if (m_moveComp->GetIsJumping())
+	{
+		SwapAnimation(m_jumpAnim);
+	}
+	else if (m_moveComp->GetIsAirborne())
+	{
+		SwapAnimation(m_fallingAnim);
+	}
+	else
+	{
+		if (xInput != 0)
+			SwapAnimation(m_walkAnim);
+		else SwapAnimation(m_idleAnim);
+	}
 }
 
 void AMCharacter::IncreaseStats()
@@ -157,4 +187,12 @@ void AMCharacter::IncreaseStats()
 			}
 		}
 	}
+}
+
+
+void AMCharacter::SwapAnimation(UPaperFlipbook* anim, bool looping)
+{
+	m_sprite->SetFlipbook(anim);
+	m_sprite->SetLooping(looping);
+	m_sprite->Play();
 }

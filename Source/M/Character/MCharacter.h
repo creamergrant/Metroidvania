@@ -6,6 +6,16 @@
 #include "GameFramework/Pawn.h"
 #include "MCharacter.generated.h"
 
+UENUM()
+enum class AnimState
+{
+	Idle,
+	Walk,
+	Jump,
+	Dash,
+	Attack
+};
+
 UCLASS()
 class M_API AMCharacter : public APawn
 {
@@ -48,15 +58,34 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
 	class UPaperFlipbook* m_idleAnim;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
+	class UPaperFlipbook* m_dashAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
+	class UPaperFlipbook* m_jumpAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
+	class UPaperFlipbook* m_fallingAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
+	class UPaperFlipbook* m_walkAnim;
+
+	FRotator GetSpellDirection();
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	AnimState m_animState = AnimState::Idle;
+	
+	void SwapAnimation(UPaperFlipbook* anim, bool looping = true);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void UpdateAnimation();
+	void UpdateAnimation(float xInput);
 
 	float m_movementStat;
 	float m_dmgStat;
@@ -70,5 +99,5 @@ public:
 
 	void IncreaseStats();
 
-	
+	void SetAnimState(AnimState anim) { m_animState = anim; }
 };

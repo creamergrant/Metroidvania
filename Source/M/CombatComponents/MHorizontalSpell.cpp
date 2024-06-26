@@ -4,6 +4,8 @@
 #include "MHorizontalSpell.h"
 #include "MHorizontalSpellProjectile.h"
 #include "UObject/ConstructorHelpers.h"
+#include "MCharacter.h"
+#include "PaperFlipbookComponent.h"
 
 UMHorizontalSpell::UMHorizontalSpell()
 {
@@ -32,6 +34,9 @@ void UMHorizontalSpell::FireSpell()
 	{
 		FActorSpawnParameters params;
 		params.Owner = this->GetOwner();
-		GetWorld()->SpawnActor<AMHorizontalSpellProjectile>(m_projectile, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation(), params);
+		
+		AMCharacter* character = Cast<AMCharacter>(GetOwner());
+
+		GetWorld()->SpawnActor<AMHorizontalSpellProjectile>(m_projectile, GetOwner()->GetActorLocation(), character->GetSpellDirection(), params);
 	}
 }

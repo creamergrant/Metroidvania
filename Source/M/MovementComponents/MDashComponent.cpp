@@ -38,7 +38,7 @@ void UMDashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (m_bIsDashing)
 	{
 		FHitResult Hit;
-		FVector Delta = { -m_dashDirection * m_dashImpulseValue * DeltaTime, 0.0f, 0.0000001f };
+		FVector Delta = { m_dashDirection * m_dashImpulseValue * DeltaTime, 0.0f, 0.0000001f };
 		MoveUpdatedComponent(Delta, UpdatedPrimitive->GetComponentRotation(), true, &Hit, ETeleportType::TeleportPhysics);
 
 		if (Hit.bBlockingHit) // if youve hit something solid, stop the dash.
@@ -47,6 +47,7 @@ void UMDashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			GetWorld()->GetTimerManager().ClearTimer(m_dashDurationTimer);
 			EndDash();
 		}
+		
 	}
 }
 

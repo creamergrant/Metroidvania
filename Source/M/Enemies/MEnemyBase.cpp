@@ -4,6 +4,7 @@
 #include "MEnemyBase.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "MCharacter.h"
 
 AMEnemyBase::AMEnemyBase()
 {
@@ -52,12 +53,14 @@ void AMEnemyBase::BeginPlay()
 
 void AMEnemyBase::ComponentOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (Cast<AMCharacter>(OtherActor)) return;
 	m_direction = -m_direction;
 	SetActorRotation(FQuat(m_direction.Rotation()));
 }
 
 void AMEnemyBase::ComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (Cast<AMCharacter>(OtherActor)) return;
 	m_direction = -m_direction;
 	SetActorRotation(FQuat(m_direction.Rotation()));
 }

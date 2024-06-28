@@ -129,10 +129,19 @@ void AMPlayerController::Dash()
 
 void AMPlayerController::Spell()
 {
-	if (m_character->m_spells.Contains("MAcceleratingSpell"))
+	if (m_character->m_spells.Contains("MAcceleratingSpell") && m_character->GetMana() >= 33 && m_canSpell)
 	{
+		FTimerHandle delay;
+		GetWorldTimerManager().SetTimer(delay, this, &AMPlayerController::CanSpell, .5f);
+		m_canSpell = false;
 		m_character->m_spells["MAcceleratingSpell"]->FireSpell();
+		m_character->DecreaseMana(33);
 	}
+}
+
+void AMPlayerController::CanSpell()
+{
+	m_canSpell = true;
 }
 
 void AMPlayerController::SetMovementControlLockState(bool State)

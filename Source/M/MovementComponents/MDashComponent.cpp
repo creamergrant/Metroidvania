@@ -63,6 +63,7 @@ void UMDashComponent::Dash()
 
 	m_bIsDashing = true;
 	m_bCanDash = false;
+	Character->SetCanAttack(false);
 
 	GetWorld()->GetTimerManager().SetTimer(m_dashDurationTimer, this, &UMDashComponent::EndDash, m_dashDurationTimeAmount, false);
 }
@@ -72,6 +73,7 @@ void UMDashComponent::EndDash()
 	PC->SetMovementControlLockState(false);
 		
 	m_bIsDashing = false;
+	Character->SetCanAttack(true);
 
 	GetWorld()->GetTimerManager().SetTimer(m_dashDurationTimer, this, &UMDashComponent::EnableCanDash, m_dashCooldownTimeAmount, false);
 

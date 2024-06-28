@@ -14,8 +14,7 @@
 #include "MAcceleratingSpell.h"
 #include "MSaveGame.h"
 #include "MDoubleJumpComponent.h"
-#include "PaperFlipbook.h"
-#include "PaperFlipbookComponent.h"
+#include "MAnimationComponent.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -63,26 +62,17 @@ AMCharacter::AMCharacter()
 
 	m_dashComp = CreateDefaultSubobject<UMDashComponent>("DashComp");
 
-	m_sprite = CreateDefaultSubobject<UPaperFlipbookComponent>("Sprite");
-	m_sprite->AlwaysLoadOnClient = true;
-	m_sprite->AlwaysLoadOnServer = true;
-	m_sprite->bOwnerNoSee = false;
-	m_sprite->bAffectDynamicIndirectLighting = true;
-	m_sprite->PrimaryComponentTick.TickGroup = TG_PrePhysics;
-	m_sprite->SetupAttachment(m_movement);
-	static FName CollisionProfileName(TEXT("NoCollision"));
-	m_sprite->SetCollisionProfileName(CollisionProfileName);
-	m_sprite->SetGenerateOverlapEvents(false);
-
+	m_aniComp = CreateDefaultSubobject<UMAnimationComponent>("AnimationComp");
+	m_aniComp->SetupAttachment(m_movement);
 
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
-	m_combatComp->SetupAttachment(m_sprite);
+	m_combatComp->SetupAttachment(m_aniComp);
 	m_combatComp->SetVisibility(true);
 }
 
 FRotator AMCharacter::GetSpellDirection()
 {
-	return (m_sprite->GetRelativeRotation().Vector() * FRotator(0,180,0).Vector()).Rotation();
+	return (m_aniComp->GetRelativeRotation().Vector() * FRotator(0,180,0).Vector()).Rotation();
 }
 
 // Called when the game starts or when spawned
@@ -117,38 +107,7 @@ void AMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector2D moveVal = m_moveComp->GetMovementValue();
-	if (moveVal.X != 0)
-	{
-		if (moveVal.X > 0)
-			m_sprite->SetRelativeRotation(FRotator(0, 180, 0));
-		if (moveVal.X < 0)
-			m_sprite->SetRelativeRotation(FRotator(FRotator::ZeroRotator));
-	}
-
-	UpdateAnimation(moveVal.X);
-}
-
-void AMCharacter::UpdateAnimation(float xInput)
-{
-	if (m_dashComp->GetIsDashing())
-	{
-		SwapAnimation(m_dashAnim);
-	}
-	else if (m_moveComp->GetIsJumping())
-	{
-		SwapAnimation(m_jumpAnim);
-	}
-	else if (m_moveComp->GetIsAirborne())
-	{
-		SwapAnimation(m_fallingAnim);
-	}
-	else
-	{
-		if (xInput != 0)
-			SwapAnimation(m_walkAnim);
-		else SwapAnimation(m_idleAnim);
-	}
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::FromInt(m_mana));
 }
 
 void AMCharacter::IncreaseStats()
@@ -189,10 +148,75 @@ void AMCharacter::IncreaseStats()
 	}
 }
 
-
-void AMCharacter::SwapAnimation(UPaperFlipbook* anim, bool looping)
+FVector2D AMCharacter::GetMovementValue()
 {
-	m_sprite->SetFlipbook(anim);
-	m_sprite->SetLooping(looping);
-	m_sprite->Play();
+	return m_moveComp->GetMovementValue();
 }
+
+bool AMCharacter::GetIsAirborne()
+{
+	return m_moveComp->GetIsAirborne();
+}
+
+bool AMCharacter::GetIsJumping()
+{
+	return m_moveComp->GetIsJumping();
+}
+
+bool AMCharacter::GetIsDashing()
+{
+	return m_dashComp->GetIsDashing();
+}
+
+bool AMCharacter::GetIsAttacking()
+{
+	return m_combatComp->GetIsAttacking();
+}
+
+void AMCharacter::SetCanAttack(bool canAttack)
+{
+	m_combatComp->m_canAttack = canAttack;
+}
+
+void AMCharacter::IncreaseMana(int add)
+{
+	m_mana += add;
+	if (m_mana > m_maxMana)
+		m_mana = m_maxMana;
+}
+
+void AMCharacter::SetMana(int mana)
+{
+	m_mana = mana;
+	if (m_mana > m_maxMana)
+		m_mana = m_maxMana;
+}
+
+void AMCharacter::DecreaseMana(int sub)
+{
+	m_mana -= sub;
+	if (m_mana < 0)
+		m_mana = 0;
+}
+
+void AMCharacter::IncreaseHealth(int add)
+{
+	m_health += add;
+	if (m_health < m_maxHealth)
+		m_health = m_maxHealth;
+}
+
+void AMCharacter::SetHealth(int health)
+{
+	m_health = health;
+	if (m_health > m_maxHealth)
+		m_health = m_maxHealth;
+}
+
+void AMCharacter::DecreaseHealth(int sub)
+{
+	m_health -= sub;
+	if (m_health < 0)
+		m_health = 0;
+}
+

@@ -61,6 +61,10 @@ protected:
 	void Dash();
 	void Spell();
 
+	bool m_canSpell = true;
+
+	void CanSpell();
+
 	FVector2D m_currentDirectionalInput;
 	FVector2D m_lastDirectionalInput;
 

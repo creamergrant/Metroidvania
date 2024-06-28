@@ -63,11 +63,20 @@ protected:
 
 	UBoxComponent* SelectHitBox();
 
+	class UMAnimationComponent* m_aniComp;
 
+	int m_impactFrameNum = 3;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Attack();
+
+	bool m_bIsAttacking = false;
+	bool m_canAttack = true;
+
+	bool GetIsAttacking() { return m_bIsAttacking; }
+
+	ComboStep GetComboStep() { return m_comboStep; }
 };

@@ -52,23 +52,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	TMap<FString, USceneComponent*> m_movementComps;
 
-	UPROPERTY(EditAnywhere, Category = Sprite)
-	class UPaperFlipbookComponent* m_sprite;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_idleAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_dashAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_jumpAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_fallingAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_walkAnim;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
+	class UMAnimationComponent* m_aniComp;
 
 	FRotator GetSpellDirection();
 
@@ -77,15 +62,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	AnimState m_animState = AnimState::Idle;
-	
-	void SwapAnimation(UPaperFlipbook* anim, bool looping = true);
+	int m_mana = 0;
+	int m_health = 100;
+	int m_maxHealth = 100;
 
+	const int m_maxMana = 99;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void UpdateAnimation(float xInput);
 
 	float m_movementStat;
 	float m_dmgStat;
@@ -99,5 +83,20 @@ public:
 
 	void IncreaseStats();
 
-	void SetAnimState(AnimState anim) { m_animState = anim; }
+	FVector2D GetMovementValue();
+	bool GetIsAirborne();
+	bool GetIsJumping();
+	bool GetIsDashing();
+	bool GetIsAttacking();
+
+	void SetCanAttack(bool canAttack);
+
+	int GetMana() { return m_mana; }
+	void IncreaseMana(int add);
+	void SetMana(int mana);
+	void DecreaseMana(int sub);
+	int GetHealth() { return m_health; }
+	void IncreaseHealth(int add);
+	void SetHealth(int health);
+	void DecreaseHealth(int sub);
 };

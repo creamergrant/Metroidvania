@@ -4,6 +4,9 @@
 #include "MCombatComponent.h"
 #include "Components/BoxComponent.h"
 #include "MSaveObjInterface.h"
+#include "MEnemyBase.h"
+#include "MAnimationComponent.h"
+#include "PaperFlipbookComponent.h"
 
 // Sets default values for this component's properties
 UMCombatComponent::UMCombatComponent()
@@ -40,7 +43,7 @@ void UMCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
+	m_aniComp = Cast<UMAnimationComponent>(GetAttachParent());
 }
 
 void UMCombatComponent::OnRegister()
@@ -63,12 +66,15 @@ UBoxComponent* UMCombatComponent::SelectHitBox()
 		switch (m_comboStep)
 		{
 		case ComboStep::Start:
+			m_impactFrameNum = 3;
 			return m_groundAtk1;
 			break;
 		case ComboStep::Middle:
+			m_impactFrameNum = 3;
 			return m_groundAtk2;
 			break;
 		case ComboStep::Last:
+			m_impactFrameNum = 4;
 			return m_groundAtk3;
 			break;
 		}
@@ -101,30 +107,34 @@ UBoxComponent* UMCombatComponent::SelectHitBox()
 void UMCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (m_attack)
+	if (m_bIsAttacking)
 	{
 		m_currentHitBox = SelectHitBox();
-
-		TArray<AActor*> actors;
-		m_currentHitBox->GetOverlappingActors(actors);
-		for (AActor* a : actors)
+		if (m_aniComp->m_sprite->GetPlaybackPositionInFrames() == m_impactFrameNum)
 		{
-			if (a->Implements<UMSaveObjInterface>())
+			TArray<AActor*> actors;
+			m_currentHitBox->GetOverlappingActors(actors);
+			for (AActor* a : actors)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FText::AsNumber((int)m_comboStep).ToString());
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, m_currentHitBox->GetFName().ToString());
+				if (Cast<AMEnemyBase>(a))
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FText::AsNumber((int)m_comboStep).ToString());
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, m_currentHitBox->GetFName().ToString());
+					m_aniComp->IncreaseMana(11);
+				}
 			}
+			m_bIsAttacking = false;
 		}
-		m_attack = false;
 	}
 }
 
 void UMCombatComponent::Attack()
 {
-	if (m_comboStep != ComboStep::Last)
+	if (m_comboStep != ComboStep::Last && m_canAttack)
 	{
 		m_comboStep = (ComboStep)((int)m_comboStep + 1);
-		m_attack = true;
+		m_bIsAttacking = true;
+		m_canAttack = false;
 		GetWorld()->GetTimerManager().ClearTimer(m_resetAttack);
 		GetWorld()->GetTimerManager().SetTimer(m_resetAttack, this, &UMCombatComponent::ResetAttack, .5f);
 	}

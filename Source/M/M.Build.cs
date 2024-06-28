@@ -13,6 +13,7 @@ public class M : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
         PrivateIncludePaths.Add("../Source/M/Actors");
+        PrivateIncludePaths.Add("../Source/M/AnimationComponent");
         PrivateIncludePaths.Add("../Source/M/Character");
         PrivateIncludePaths.Add("../Source/M/CombatComponents");
         PrivateIncludePaths.Add("../Source/M/Enemies");

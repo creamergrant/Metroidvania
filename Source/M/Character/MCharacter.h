@@ -16,6 +16,15 @@ enum class AnimState
 	Attack
 };
 
+UENUM()
+enum class AttackType
+{
+	Ground,
+	Air,
+	Up,
+	Down
+};
+
 UCLASS()
 class M_API AMCharacter : public APawn
 {
@@ -99,4 +108,7 @@ public:
 	void IncreaseHealth(int add);
 	void SetHealth(int health);
 	void DecreaseHealth(int sub);
+
+	void SetAttackType(enum AttackType type);
+	FName GetActiveHitBoxName();
 };

@@ -17,15 +17,6 @@ enum class ComboStep
 	Last
 };
 
-UENUM()
-enum class AttackType
-{
-	Ground,
-	Air,
-	Up,
-	Down
-};
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class M_API UMCombatComponent : public USceneComponent
 {
@@ -43,9 +34,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = GroundAttacks)
 	UBoxComponent* m_groundAtk3;
 
+	UPROPERTY(EditDefaultsOnly, Category = UpAttack)
+	UBoxComponent* m_upAtk;
+	UPROPERTY(EditDefaultsOnly, Category = DownAttack)
+	UBoxComponent* m_downAtk;
+
 	bool m_attack = false;
 
-	AttackType m_attackType = AttackType::Ground;
+	enum class AttackType m_attackType;
 
 	ComboStep m_comboStep = ComboStep::NoAttack;
 
@@ -79,4 +75,10 @@ public:
 	bool GetIsAttacking() { return m_bIsAttacking; }
 
 	ComboStep GetComboStep() { return m_comboStep; }
+
+	void SetAttackType(enum class AttackType type) { m_attackType = type; }
+
+	enum class AttackType GetAttackType() { return m_attackType; }
+
+	FName GetActiveHitBoxName();
 };

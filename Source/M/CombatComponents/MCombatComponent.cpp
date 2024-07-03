@@ -7,6 +7,7 @@
 #include "MEnemyBase.h"
 #include "MAnimationComponent.h"
 #include "PaperFlipbookComponent.h"
+#include "MCharacter.h"
 
 // Sets default values for this component's properties
 UMCombatComponent::UMCombatComponent()
@@ -36,6 +37,21 @@ UMCombatComponent::UMCombatComponent()
 	m_groundAtk3->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
 	m_groundAtk3->SetCollisionProfileName("OverlapAll");
 
+	m_upAtk = CreateDefaultSubobject<UBoxComponent>("UpAttack");
+	m_upAtk->SetRelativeLocation({ 0,0,155 });
+	m_upAtk->SetRelativeRotation({ 0,0,0 });
+	m_upAtk->SetBoxExtent({ 65,10,125 });
+	m_upAtk->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+	m_upAtk->SetCollisionProfileName("OverlapAll");
+
+	m_downAtk = CreateDefaultSubobject<UBoxComponent>("DownAttack");
+	m_downAtk->SetRelativeLocation({ 0,0,-155 });
+	m_downAtk->SetRelativeRotation({ 0,0,0 });
+	m_downAtk->SetBoxExtent({ 65,10,125 });
+	m_downAtk->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+	m_downAtk->SetCollisionProfileName("OverlapAll");
+
+	m_attackType = AttackType::Ground;
 }
 
 // Called when the game starts
@@ -53,6 +69,8 @@ void UMCombatComponent::OnRegister()
 	m_groundAtk1->SetupAttachment(this);
 	m_groundAtk2->SetupAttachment(this);
 	m_groundAtk3->SetupAttachment(this);
+	m_upAtk->SetupAttachment(this);
+	m_downAtk->SetupAttachment(this);
 }
 
 UBoxComponent* UMCombatComponent::SelectHitBox()
@@ -60,7 +78,8 @@ UBoxComponent* UMCombatComponent::SelectHitBox()
 	switch (m_attackType)
 	{
 	case AttackType::Down:
-
+		m_impactFrameNum = 7;
+		return m_downAtk;
 		break;
 	case AttackType::Ground:
 		switch (m_comboStep)
@@ -94,7 +113,8 @@ UBoxComponent* UMCombatComponent::SelectHitBox()
 		}
 		break;
 	case AttackType::Up:
-
+		m_impactFrameNum = 8;
+		return m_upAtk;
 		break;
 	default:
 		return m_groundAtk1;
@@ -109,7 +129,6 @@ void UMCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (m_bIsAttacking)
 	{
-		m_currentHitBox = SelectHitBox();
 		if (m_aniComp->m_sprite->GetPlaybackPositionInFrames() == m_impactFrameNum)
 		{
 			TArray<AActor*> actors;
@@ -137,7 +156,13 @@ void UMCombatComponent::Attack()
 		m_canAttack = false;
 		GetWorld()->GetTimerManager().ClearTimer(m_resetAttack);
 		GetWorld()->GetTimerManager().SetTimer(m_resetAttack, this, &UMCombatComponent::ResetAttack, .5f);
+		m_currentHitBox = SelectHitBox();
 	}
+}
+
+FName UMCombatComponent::GetActiveHitBoxName()
+{
+	return m_currentHitBox->GetFName();
 }
 
 void UMCombatComponent::ResetAttack()

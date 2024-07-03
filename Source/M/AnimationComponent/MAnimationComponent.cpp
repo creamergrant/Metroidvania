@@ -64,28 +64,15 @@ void UMAnimationComponent::UpdateAnimation()
 	{
 		SwapAnimation(m_dashAnim);
 	}
-	else if (m_character->GetIsJumping())
+	else if (m_character->GetIsJumping() && !m_attackAnimation)
 	{
 		SwapAnimation(m_jumpAnim);
 	}
 	else
 	{
-		if (m_character->m_combatComp->GetIsAttacking())
+		if (m_character->GetIsAttacking())
 		{
-			switch (m_character->m_combatComp->GetComboStep())
-			{
-			case ComboStep::NoAttack:
-				break;
-			case ComboStep::Start:
-				SwapAnimation(m_groundAtk1, false);
-				break;
-			case ComboStep::Middle:
-				SwapAnimation(m_groundAtk2, false);
-				break;
-			case ComboStep::Last:
-				SwapAnimation(m_groundAtk3, false);
-				break;
-			}
+			SwapAnimation(m_attackAnimations[m_character->GetActiveHitBoxName()], false);
 			m_attackAnimation = true;
 		}
 		else if (!m_attackAnimation)

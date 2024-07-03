@@ -35,14 +35,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
 	class UPaperFlipbook* m_walkAnim;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_groundAtk1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_groundAtk2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FlipBooks)
-	class UPaperFlipbook* m_groundAtk3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackAnimations)
+	TMap<FName, class UPaperFlipbook*> m_attackAnimations;
 
 protected:
 	// Called when the game starts

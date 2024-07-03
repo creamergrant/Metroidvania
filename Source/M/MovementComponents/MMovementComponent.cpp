@@ -134,6 +134,18 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 void UMMovementComponent::Move(const FVector2D& Value)
 {
 	m_movementValue = Value;
+	if (m_movementValue.Y == 0)
+	{
+		m_character->SetAttackType(AttackType::Ground);
+	}
+	if (m_movementValue.Y > 0)
+	{
+		m_character->SetAttackType(AttackType::Up);
+	}
+	if (m_movementValue.Y < 0)
+	{
+		m_character->SetAttackType(AttackType::Down);
+	}
 }
 
 void UMMovementComponent::Jump()

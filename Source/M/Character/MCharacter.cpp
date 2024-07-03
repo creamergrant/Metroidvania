@@ -220,3 +220,13 @@ void AMCharacter::DecreaseHealth(int sub)
 		m_health = 0;
 }
 
+FName AMCharacter::GetActiveHitBoxName()
+{
+	return m_combatComp->GetActiveHitBoxName();
+}
+
+void AMCharacter::SetAttackType(AttackType type)
+{
+	m_combatComp->SetAttackType(type);
+}
+

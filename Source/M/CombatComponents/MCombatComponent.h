@@ -61,6 +61,8 @@ protected:
 
 	class UMAnimationComponent* m_aniComp;
 
+	class AMCharacter* m_character;
+
 	int m_impactFrameNum = 3;
 
 public:	

@@ -106,8 +106,3 @@ void UMAnimationComponent::OnFinshedPlaying()
 	m_character->SetCanAttack(true);
 }
 
-void UMAnimationComponent::IncreaseMana(int add)
-{
-	m_character->IncreaseMana(add);
-}
-

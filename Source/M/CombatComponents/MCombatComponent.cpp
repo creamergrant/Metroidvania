@@ -60,6 +60,7 @@ void UMCombatComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	m_aniComp = Cast<UMAnimationComponent>(GetAttachParent());
+	m_character = Cast<AMCharacter>(m_aniComp->GetAttachParentActor());
 }
 
 void UMCombatComponent::OnRegister()
@@ -139,7 +140,8 @@ void UMCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FText::AsNumber((int)m_comboStep).ToString());
 					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, m_currentHitBox->GetFName().ToString());
-					m_aniComp->IncreaseMana(11);
+					m_character->IncreaseMana(11);
+					m_character->KnockBack();
 				}
 			}
 			m_bIsAttacking = false;

@@ -45,7 +45,6 @@ void AMSpellPickup::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompo
 				ps->m_components |= static_cast<uint32>(ESaveComponents::AcceleratingSpell);
 
 				UMAcceleratingSpell* spell = NewObject<UMAcceleratingSpell>(Character, ComponentClass);
-				spell->Rename(new TCHAR('a'), Character);
 				spell->m_projectile = AMAcceleratingSpellProjectile::StaticClass();
 				Character->m_spells.Add("MAcceleratingSpell", spell);
 			}
@@ -54,7 +53,6 @@ void AMSpellPickup::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedCompo
 				ps->m_components |= static_cast<uint32>(ESaveComponents::HorizontalSpell);
 
 				UMHorizontalSpell* spell = NewObject<UMHorizontalSpell>(Character, ComponentClass);
-				spell->Rename(new TCHAR('a'), Character);
 				spell->m_projectile = AMHorizontalSpellProjectile::StaticClass();
 				Character->m_spells.Add("MHoriztonalSpell", spell);
 			}

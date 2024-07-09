@@ -76,6 +76,14 @@ protected:
 	int m_maxHealth = 100;
 
 	const int m_maxMana = 99;
+
+	float m_knockForce = 200;
+	float m_knockLength = .25f;
+
+	bool m_bIsKnockBack = false;
+
+	void StopKnockBack();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -91,6 +99,8 @@ public:
 	TArray<class UMEquipable*> m_equips;
 
 	void IncreaseStats();
+
+	void KnockBack();
 
 	FVector2D GetMovementValue();
 	bool GetIsAirborne();

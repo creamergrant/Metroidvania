@@ -58,6 +58,4 @@ public:
 
 	UFUNCTION()
 	void OnFinshedPlaying();
-
-	void IncreaseMana(int add);
 };

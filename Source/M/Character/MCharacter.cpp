@@ -102,12 +102,29 @@ void AMCharacter::BeginPlay()
 	}
 }
 
+void AMCharacter::StopKnockBack()
+{
+	m_bIsKnockBack = false;
+}
+
 // Called every frame
 void AMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::FromInt(m_mana));
+
+	if (m_bIsKnockBack)
+	{
+		FVector dir = GetSpellDirection().Vector();
+		float y = 0;
+		if (m_combatComp->GetActiveHitBoxName().IsEqual("DownAttack"))
+		{
+			y = 1;
+			dir.X = 0;
+		}
+		m_movement->MoveComponent(FVector(-dir.X * m_knockForce * DeltaTime, 0, y * 2000 * DeltaTime), m_movement->GetComponentRotation(), true);
+	}
 }
 
 void AMCharacter::IncreaseStats()
@@ -146,6 +163,13 @@ void AMCharacter::IncreaseStats()
 			}
 		}
 	}
+}
+
+void AMCharacter::KnockBack()
+{
+	m_bIsKnockBack = true;
+	FTimerHandle delay;
+	GetWorldTimerManager().SetTimer(delay, this, &AMCharacter::StopKnockBack, m_knockLength);
 }
 
 FVector2D AMCharacter::GetMovementValue()

@@ -33,6 +33,8 @@ AMCharacter::AMCharacter()
 	m_movement->BodyInstance.bLockYTranslation = true;
 	SetRootComponent(m_movement);
 
+	
+
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>("mesh");
 	m_mesh->SetSimulatePhysics(false);
 	m_mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -68,6 +70,8 @@ AMCharacter::AMCharacter()
 	m_combatComp = CreateDefaultSubobject<UMCombatComponent>("CombatComp");
 	m_combatComp->SetupAttachment(m_aniComp);
 	m_combatComp->SetVisibility(true);
+
+	OnTakeAnyDamage.AddDynamic(this, &AMCharacter::TakeAnyDamage);
 }
 
 FRotator AMCharacter::GetSpellDirection()
@@ -248,6 +252,12 @@ FName AMCharacter::GetActiveHitBoxName()
 {
 	return m_combatComp->GetActiveHitBoxName();
 }
+
+void AMCharacter::TakeAnyDamage(AActor* damagedActor, float damage, const UDamageType* damageType, AController* InstigatorBY, AActor* damagedCausedBy)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "got hit");
+}
+
 
 void AMCharacter::SetAttackType(AttackType type)
 {

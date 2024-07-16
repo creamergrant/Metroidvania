@@ -121,4 +121,7 @@ public:
 
 	void SetAttackType(enum AttackType type);
 	FName GetActiveHitBoxName();
+
+	UFUNCTION()
+	void TakeAnyDamage(AActor* damagedActor, float damage, const class UDamageType* damageType, class AController* InstigatorBY, AActor* damagedCausedBy);
 };

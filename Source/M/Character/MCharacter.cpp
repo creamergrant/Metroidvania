@@ -127,7 +127,7 @@ void AMCharacter::Tick(float DeltaTime)
 			y = 1;
 			dir.X = 0;
 		}
-		m_movement->MoveComponent(FVector(-dir.X * m_knockForce * DeltaTime, 0, y * 2000 * DeltaTime), m_movement->GetComponentRotation(), true);
+		m_movement->MoveComponent(FVector(-dir.X * m_knockForce * (1.5*DeltaTime), 0, y * 2000 * DeltaTime), m_movement->GetComponentRotation(), true);
 	}
 }
 

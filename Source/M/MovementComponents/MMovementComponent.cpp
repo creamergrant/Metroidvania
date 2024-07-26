@@ -150,11 +150,23 @@ void UMMovementComponent::Move(const FVector2D& Value)
 
 void UMMovementComponent::Jump()
 {
+
+	//
+	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_bIsJumping)
+	{
+		UpdatedPrimitive->SetSimulatePhysics(false);
+	}
+	//
+	UpdatedPrimitive->SetSimulatePhysics(true);
+
+
 	if (m_movementValue.Y == -1)
 	{
 		DropDown();
 		return;
 	}
+
+
 	if (m_bCanJump && !m_bIsJumping && m_jumpTimeCurrent < m_jumpTimeMax) //last condition is to prevent perma bounce if jump is held
 	{
 		m_bIsAirborne = true;
@@ -166,6 +178,8 @@ void UMMovementComponent::Jump()
 		FTimerHandle SweepEnable;
 		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.017f, false);
 		m_jumpCount++;
+
+
 
 		//UpdatedPrimitive->SetEnableGravity(false);
 	}

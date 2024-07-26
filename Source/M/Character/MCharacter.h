@@ -77,7 +77,7 @@ protected:
 
 	const int m_maxMana = 99;
 
-	float m_knockForce = 200;
+	float m_knockForce = 1000;
 	float m_knockLength = .25f;
 
 	bool m_bIsKnockBack = false;

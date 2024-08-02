@@ -15,6 +15,7 @@
 #include "MSaveGame.h"
 #include "MDoubleJumpComponent.h"
 #include "MAnimationComponent.h"
+#include "MEnemyBase.h"
 
 // Sets default values
 AMCharacter::AMCharacter()
@@ -31,6 +32,7 @@ AMCharacter::AMCharacter()
 	m_movement->BodyInstance.bLockYRotation = true;
 	m_movement->BodyInstance.bLockZRotation = true;
 	m_movement->BodyInstance.bLockYTranslation = true;
+	m_movement->OnComponentBeginOverlap.AddDynamic(this, &AMCharacter::OnBeginOverlap);
 	SetRootComponent(m_movement);
 
 	
@@ -171,9 +173,20 @@ void AMCharacter::IncreaseStats()
 
 void AMCharacter::KnockBack()
 {
+
+	GetWorldTimerManager().ClearTimer(m_knockBackTimer);
+
+	if (GetMovementValue().X == 0)
+	{
+		m_knockForce = 200;
+	}
+	else
+	{
+		m_knockForce = 2000;
+	}
+
 	m_bIsKnockBack = true;
-	FTimerHandle delay;
-	GetWorldTimerManager().SetTimer(delay, this, &AMCharacter::StopKnockBack, m_knockLength);
+	GetWorldTimerManager().SetTimer(m_knockBackTimer, this, &AMCharacter::StopKnockBack, m_knockLength);
 }
 
 FVector2D AMCharacter::GetMovementValue()
@@ -256,6 +269,14 @@ FName AMCharacter::GetActiveHitBoxName()
 void AMCharacter::TakeAnyDamage(AActor* damagedActor, float damage, const UDamageType* damageType, AController* InstigatorBY, AActor* damagedCausedBy)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "got hit");
+}
+
+void AMCharacter::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (AMEnemyBase* enemy = Cast<AMEnemyBase>(OtherActor))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "got hit");
+	}
 }
 
 

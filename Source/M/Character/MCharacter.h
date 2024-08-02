@@ -84,6 +84,8 @@ protected:
 
 	void StopKnockBack();
 
+	FTimerHandle m_knockBackTimer;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -124,4 +126,7 @@ public:
 
 	UFUNCTION()
 	void TakeAnyDamage(AActor* damagedActor, float damage, const class UDamageType* damageType, class AController* InstigatorBY, AActor* damagedCausedBy);
+
+	UFUNCTION()
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

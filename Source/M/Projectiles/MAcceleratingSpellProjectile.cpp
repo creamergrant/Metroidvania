@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "MSaveObjInterface.h"
 #include "MTestingObject.h"
+#include "MEnemyBase.h"
 
 AMAcceleratingSpellProjectile::AMAcceleratingSpellProjectile()
 {
@@ -77,7 +78,12 @@ void AMAcceleratingSpellProjectile::OnBeginOverlap(UPrimitiveComponent* Overlapp
 {
 	if (Cast<AMTestingObject>(Other))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit");
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit : TEST OBJECT");
+		Explode();
+	}
+	if (Cast<AMEnemyBase>(Other))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit : ENEMY");
 		Explode();
 	}
 }

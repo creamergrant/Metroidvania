@@ -155,10 +155,9 @@ void UMMovementComponent::Jump()
 	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_bIsJumping)
 	{
 		UpdatedPrimitive->SetSimulatePhysics(false);
+		UpdatedPrimitive->SetSimulatePhysics(true);
 	}
 	//
-	UpdatedPrimitive->SetSimulatePhysics(true);
-
 
 	if (m_movementValue.Y == -1)
 	{

@@ -79,12 +79,9 @@ UBoxComponent* UMCombatComponent::SelectHitBox()
 	switch (m_attackType)
 	{
 	case AttackType::Down:
-		if (m_character->GetIsAirborne())
-		{
-			m_impactFrameNum = 7;
-			return m_downAtk;
-			break;
-		}
+		m_impactFrameNum = 7;
+		return m_downAtk;
+		break;
 	case AttackType::Ground:
 		switch (m_comboStep)
 		{

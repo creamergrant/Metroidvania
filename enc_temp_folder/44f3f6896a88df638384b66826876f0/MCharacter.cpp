@@ -178,11 +178,11 @@ void AMCharacter::KnockBack()
 
 	if (GetMovementValue().X == 0)
 	{
-		m_knockForce = 1000;
+		m_knockForce = 200;
 	}
 	else
 	{
-		m_knockForce = 1500; // * 1.5
+		m_knockForce = 2000;
 	}
 
 	m_bIsKnockBack = true;

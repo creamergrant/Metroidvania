@@ -150,16 +150,6 @@ void UMMovementComponent::Move(const FVector2D& Value)
 
 void UMMovementComponent::Jump()
 {
-
-	// stops getting pulled down to earth, i know we don't like toggling phys but til we find a better way
-	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_bIsJumping)
-	{
-		UpdatedPrimitive->SetSimulatePhysics(false);
-	}
-	//
-	UpdatedPrimitive->SetSimulatePhysics(true);
-
-
 	if (m_movementValue.Y == -1)
 	{
 		DropDown();

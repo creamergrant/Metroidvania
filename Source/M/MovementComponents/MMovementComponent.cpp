@@ -127,7 +127,8 @@ void UMMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	{
 		m_bIsJumping = false;
 		m_jumpTimeCurrent = m_jumpTimeMax + 1.0f; //sets condition to prevent perma jump held bouncing
-		//UpdatedPrimitive->SetEnableGravity(true);
+		UpdatedPrimitive->SetEnableGravity(true);
+		m_jumpTimeCurrent = 0;
 	}
 }
 
@@ -152,12 +153,16 @@ void UMMovementComponent::Jump()
 {
 
 	// stops getting pulled down to earth, i know we don't like toggling phys but til we find a better way
-	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_bIsJumping)
-	{
-		UpdatedPrimitive->SetSimulatePhysics(false);
-		UpdatedPrimitive->SetSimulatePhysics(true);
-	}
+	//if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_bIsJumping)
+	//{
+	//	UpdatedPrimitive->SetSimulatePhysics(false);
+	//	UpdatedPrimitive->SetSimulatePhysics(true);
+	//}
 	//
+	if (m_jumpCount == 1)
+	{
+		UpdatedPrimitive->SetEnableGravity(false);
+	}
 
 	if (m_movementValue.Y == -1)
 	{
@@ -175,16 +180,20 @@ void UMMovementComponent::Jump()
 		FTimerHandle SweepEnable;
 		GetWorld()->GetTimerManager().SetTimer(SweepEnable, this, &UMMovementComponent::EnableSweepCheck, 0.017f, false);
 		m_jumpCount++;
+		m_jumpTimeCurrent = 0;
 
-		//UpdatedPrimitive->SetEnableGravity(false);
+		GetWorld()->GetTimerManager().SetTimer(fuck, this, &UMMovementComponent::JumpEnd, .8f, false);
 	}
 }
 
 void UMMovementComponent::JumpEnd()
 {
+	if(this)
+		GetWorld()->GetTimerManager().ClearTimer(fuck);
 	m_bIsJumping = false;
 	m_jumpTimeCurrent = 0.0f;
 	//UpdatedPrimitive->SetEnableGravity(true);
+	UpdatedPrimitive->SetEnableGravity(true);
 
    	if (m_character->m_movementComps.Find("MDoubleJumpComponent") && m_bIsAirborne && m_jumpCount == 1)
 	{

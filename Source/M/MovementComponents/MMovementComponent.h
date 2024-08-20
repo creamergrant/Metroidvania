@@ -79,6 +79,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump|Coyote Time")
 	FTimerHandle m_coyoteTimeTimer;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Fuck")
+	FTimerHandle fuck;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Jump|Coyote Time")
 	float m_coyoteTimeAmount;
 

@@ -14,12 +14,18 @@ AMAcceleratingSpellProjectile::AMAcceleratingSpellProjectile()
 	m_hitBox = CreateDefaultSubobject<UBoxComponent>("HitBox");
 	m_hitBox->SetBoxExtent({ 100,100,100 });
 	m_hitBox->SetEnableGravity(false);
-	m_hitBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	m_hitBox->SetCollisionProfileName("OverlapDynamic");
+	m_hitBox->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+	m_hitBox->SetCollisionProfileName("OverlapAll");
 
-	SetRootComponent(m_hitBox);
+	m_explosionHitBox = CreateDefaultSubobject<UBoxComponent>("ExplosionHitBox");
+	m_explosionHitBox->SetBoxExtent({ 300, 300, 300 });
+	m_explosionHitBox->SetEnableGravity(false);
+	m_explosionHitBox->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+	m_explosionHitBox->SetCollisionProfileName("OverlapAll");
+	m_explosionHitBox->SetActive(true);
 
 	m_hitBox->OnComponentBeginOverlap.AddDynamic(this, &AMAcceleratingSpellProjectile::OnBeginOverlap);
+	m_explosionHitBox->OnComponentBeginOverlap.AddDynamic(this, &AMAcceleratingSpellProjectile::OnBeginOverlap);
 
 	SetRootComponent(m_hitBox);
 
@@ -43,14 +49,11 @@ void AMAcceleratingSpellProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 }
 
 void AMAcceleratingSpellProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y + FMath::Cos(DeltaTime) * 10, GetActorLocation().Z));
 
 	if (m_moveComp->Velocity.X < 0)
 	{
@@ -67,6 +70,7 @@ void AMAcceleratingSpellProjectile::Tick(float DeltaTime)
 		}
 	}
 
+
 	if (lifetimeTimer > maxLifetime)
 		Explode();
 
@@ -76,6 +80,7 @@ void AMAcceleratingSpellProjectile::Tick(float DeltaTime)
 
 void AMAcceleratingSpellProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
 	if (Cast<AMTestingObject>(Other))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit : TEST OBJECT");
@@ -85,6 +90,9 @@ void AMAcceleratingSpellProjectile::OnBeginOverlap(UPrimitiveComponent* Overlapp
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Accelerating Spell Hit : ENEMY");
 		Explode();
+
+		overlappingActors.Add(Other);
+
 	}
 }
 
@@ -117,5 +125,20 @@ void AMAcceleratingSpellProjectile::Accelerate()
 
 void AMAcceleratingSpellProjectile::Explode()
 {
+	DrawDebugBox(GetWorld(), GetActorLocation(), m_explosionHitBox->GetScaledBoxExtent(), FColor::Red);
+
+	for (AActor* a : overlappingActors)
+	{
+		if (Cast<AMTestingObject>(a))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Spell Explosion Hit : TEST OBJECT");
+		}
+		if (Cast<AMEnemyBase>(a))
+		{
+			//Do Damage Here
+			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Spell Explosion Hit Hit : ENEMY");
+		}
+	}
+
 	Destroy();
 }

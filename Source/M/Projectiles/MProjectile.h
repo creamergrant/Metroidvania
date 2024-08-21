@@ -21,6 +21,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = HitBox)
 	class UBoxComponent* m_hitBox;
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

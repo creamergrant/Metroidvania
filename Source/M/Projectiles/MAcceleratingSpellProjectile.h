@@ -20,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* m_mesh;
 
+	UPROPERTY(EditDefaultsOnly, Category = HitBox)
+	class UBoxComponent* m_explosionHitBox;
+
 protected:
 	virtual void BeginPlay() override;
 	void Accelerate();
@@ -27,6 +30,9 @@ protected:
 
 	float lifetimeTimer = 0.0f;
 	float maxLifetime = 1.0f;
+
+	TArray<AActor*> overlappingActors;
+
 public:
 	virtual void Tick(float DeltaTime) override;
 
@@ -36,6 +42,4 @@ public:
 		int32 OtherBodyIndex,
 		bool bFromSweep,
 		const FHitResult& SweepResult) override;
-
-
 };

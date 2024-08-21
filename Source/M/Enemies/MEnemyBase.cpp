@@ -54,26 +54,32 @@ void AMEnemyBase::BeginPlay()
 
 void AMEnemyBase::ComponentOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (AMCharacter* character = Cast<AMCharacter>(OtherActor))
+	if(OtherActor)
 	{
-		
-	}
-	else
-	{
-		m_direction = -m_direction;
-		SetActorRotation(FQuat(m_direction.Rotation()));
+		if (AMCharacter* character = Cast<AMCharacter>(OtherActor))
+		{
+
+		}
+		else
+		{
+			m_direction = -m_direction;
+			SetActorRotation(FQuat(m_direction.Rotation()));
+		}
 	}
 }
 
 void AMEnemyBase::ComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (AMCharacter* character = Cast<AMCharacter>(OtherActor))
+	if(OtherActor)
 	{
-		
-	}
-	else
-	{
-		m_direction = -m_direction;
-		SetActorRotation(FQuat(m_direction.Rotation()));
+		if (AMCharacter* character = Cast<AMCharacter>(OtherActor))
+		{
+
+		}
+		else
+		{
+			m_direction = -m_direction;
+			SetActorRotation(FQuat(m_direction.Rotation()));
+		}
 	}
 }

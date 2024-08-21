@@ -139,7 +139,7 @@ void UMCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 			m_currentHitBox->GetOverlappingActors(actors);
 			for (AActor* a : actors)
 			{
-				if (Cast<AMEnemyBase>(a))
+ 				if (Cast<AMEnemyBase>(a))
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FText::AsNumber((int)m_comboStep).ToString());
 					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, m_currentHitBox->GetFName().ToString());
